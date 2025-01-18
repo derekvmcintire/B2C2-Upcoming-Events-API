@@ -16,13 +16,13 @@ export async function checkEventExists(eventId: string, eventType: string): Prom
     .collection('events')
     .doc(eventId)
     .get();
-  
+
   return docRef.exists;
 }
 
 export async function storeEvent(event: Event): Promise<{ isNew: boolean }> {
   const exists = await checkEventExists(event.eventId, event.eventType);
-  
+
   if (exists) {
     return { isNew: false };
   }
