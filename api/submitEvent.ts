@@ -11,7 +11,7 @@ export default async function submitEvent(req: VercelRequest, res: VercelRespons
 
   try {
     const requestData: SubmitEventRequest = req.body;
-
+    
     // Validate request
     const validationError = validateRequest(requestData);
     if (validationError) {
@@ -29,10 +29,21 @@ export default async function submitEvent(req: VercelRequest, res: VercelRespons
       ...eventData,
       eventType: requestData.eventType,
     };
+    
+    const { isNew } = await storeEvent(event);
 
-    await storeEvent(event);
+    if (!isNew) {
+      return res.status(409).json({ 
+        message: 'Event already exists', 
+        eventId: event.eventId 
+      });
+    }
 
-    return res.status(200).json({ success: true, eventId: event.eventId });
+    return res.status(200).json({ 
+      success: true, 
+      message: 'Event successfully added',
+      eventId: event.eventId 
+    });
   } catch (error) {
     console.error('Error submitting event:', error);
     return res.status(500).json({ error: 'Internal server error' });

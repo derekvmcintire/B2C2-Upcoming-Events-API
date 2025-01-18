@@ -8,7 +8,25 @@ if (!admin.apps.length) {
   });
 }
 
-export async function storeEvent(event: Event): Promise<void> {
+export async function checkEventExists(eventId: string, eventType: string): Promise<boolean> {
+  const db = admin.firestore();
+  const docRef = await db
+    .collection('events')
+    .doc(eventType)
+    .collection('events')
+    .doc(eventId)
+    .get();
+  
+  return docRef.exists;
+}
+
+export async function storeEvent(event: Event): Promise<{ isNew: boolean }> {
+  const exists = await checkEventExists(event.eventId, event.eventType);
+  
+  if (exists) {
+    return { isNew: false };
+  }
+
   const db = admin.firestore();
   await db
     .collection('events')
@@ -16,4 +34,6 @@ export async function storeEvent(event: Event): Promise<void> {
     .collection('events')
     .doc(event.eventId)
     .set(event);
+
+  return { isNew: true };
 }
