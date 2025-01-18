@@ -8,7 +8,8 @@ export const corsMiddleware = (req: VercelRequest, res: VercelResponse, next: ()
 
   // Handle preflight OPTIONS request
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+    res.status(200).end();
+    return;
   }
 
   // Continue to the next middleware (or the actual API logic)
