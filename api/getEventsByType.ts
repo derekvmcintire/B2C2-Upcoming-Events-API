@@ -11,7 +11,7 @@ export default async function getEventsByType(req: VercelRequest, res: VercelRes
   try {
     const query: GetEventsQuery = {
       type: req.query.type as string,
-      startDate: (req.query.startDate as string) || getCurrentDate()
+      startDate: (req.query.startDate as string) || getCurrentDate(),
     };
 
     // Validate query parameters

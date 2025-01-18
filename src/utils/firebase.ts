@@ -38,12 +38,9 @@ export async function storeEvent(event: Event): Promise<{ isNew: boolean }> {
   return { isNew: true };
 }
 
-export async function fetchEventsByType(
-  type: string,
-  startDate: string
-): Promise<Event[]> {
+export async function fetchEventsByType(type: string, startDate: string): Promise<Event[]> {
   const db = admin.firestore();
-  
+
   const eventsRef = db
     .collection('events')
     .doc(type.toLowerCase())
