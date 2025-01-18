@@ -1,15 +1,30 @@
+// src/utils/firebase.ts
 import admin from 'firebase-admin';
 import { type Event } from '../types';
 
-// Initialize Firebase Admin SDK
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(JSON.parse(process.env.FIRESTORE_KEY || '')),
-  });
+/**
+ * Initializes the Firebase Firestore instance if it hasn't been initialized yet.
+ *
+ * @returns {FirebaseFirestore.Firestore} The Firestore instance.
+ */
+function initializeFirebase(): FirebaseFirestore.Firestore {
+  if (!admin.apps.length) {
+    admin.initializeApp({
+      credential: admin.credential.cert(JSON.parse(process.env.FIRESTORE_KEY || '')),
+    });
+  }
+  return admin.firestore();
 }
 
+/**
+ * Checks if an event exists in the Firestore database.
+ *
+ * @param {string} eventId - The unique identifier of the event.
+ * @param {string} eventType - The type of the event (e.g., road, cx, xc).
+ * @returns {Promise<boolean>} A promise that resolves to `true` if the event exists, otherwise `false`.
+ */
 export async function checkEventExists(eventId: string, eventType: string): Promise<boolean> {
-  const db = admin.firestore();
+  const db = initializeFirebase();
   const docRef = await db
     .collection('events')
     .doc(eventType)
@@ -20,6 +35,12 @@ export async function checkEventExists(eventId: string, eventType: string): Prom
   return docRef.exists;
 }
 
+/**
+ * Stores a new event in the Firestore database if it does not already exist.
+ *
+ * @param {Event} event - The event object to store.
+ * @returns {Promise<{ isNew: boolean }>} A promise that resolves to an object indicating if the event is new.
+ */
 export async function storeEvent(event: Event): Promise<{ isNew: boolean }> {
   const exists = await checkEventExists(event.eventId, event.eventType);
 
@@ -27,7 +48,7 @@ export async function storeEvent(event: Event): Promise<{ isNew: boolean }> {
     return { isNew: false };
   }
 
-  const db = admin.firestore();
+  const db = initializeFirebase();
   await db
     .collection('events')
     .doc(event.eventType)
@@ -38,8 +59,15 @@ export async function storeEvent(event: Event): Promise<{ isNew: boolean }> {
   return { isNew: true };
 }
 
+/**
+ * Fetches events of a specific type that occur on or after the given start date.
+ *
+ * @param {string} type - The type of the events to fetch (e.g., road, cx, xc).
+ * @param {string} startDate - The start date to filter events (formatted as YYYY-MM-DD).
+ * @returns {Promise<Event[]>} A promise that resolves to an array of events matching the criteria.
+ */
 export async function fetchEventsByType(type: string, startDate: string): Promise<Event[]> {
-  const db = admin.firestore();
+  const db = initializeFirebase();
 
   const eventsRef = db
     .collection('events')

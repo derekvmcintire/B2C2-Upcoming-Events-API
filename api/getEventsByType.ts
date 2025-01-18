@@ -4,7 +4,38 @@ import { getCurrentDate } from '../src/utils/dates';
 import { fetchEventsByType } from '../src/utils/firebase';
 import { GetEventsQuery } from '../src/types';
 
-export default async function getEventsByType(req: VercelRequest, res: VercelResponse) {
+/**
+ * Handles the retrieval of events by type.
+ *
+ * This function processes a GET request with query parameters specifying the event type
+ * and an optional start date. It validates the query parameters, retrieves events from Firebase,
+ * and returns them as a response.
+ *
+ * @param {VercelRequest} req - The incoming HTTP request, expected to include query parameters.
+ * @param {VercelResponse} res - The HTTP response object used to send a response back to the client.
+ * @returns {Promise<VercelResponse>} A promise that resolves when the response is sent.
+ *
+ * @example
+ * // Request
+ * GET /api/getEventsByType?type=road&startDate=2025-01-01
+ *
+ * // Response (success)
+ * {
+ *   events: [
+ *     { eventId: '1', name: 'Marathon', date: '2025-01-02', city: 'Boston', state: 'MA', eventType: 'road' },
+ *     { eventId: '2', name: '10K Run', date: '2025-01-03', city: 'New York', state: 'NY', eventType: 'road' }
+ *   ]
+ * }
+ *
+ * // Response (failure - validation error)
+ * {
+ *   error: 'Invalid query parameters'
+ * }
+ */
+export default async function getEventsByType(
+  req: VercelRequest,
+  res: VercelResponse
+): Promise<VercelResponse> {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
