@@ -1,0 +1,32 @@
+{
+  "name": "events-api",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel deploy --prod",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write \"**/*.{ts,json,md}\"",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@vercel/node": "^4.0.0",
+    "firebase-admin": "^12.0.0",
+    "node-fetch": "^3.3.2",
+    "path-to-regexp": "^8.2.0",
+    "tar": "^7.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.0",
+    "prettier": "^3.1.1",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
