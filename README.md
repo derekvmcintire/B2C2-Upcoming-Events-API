@@ -25,6 +25,7 @@ project-root/
 # Configuration Files
 
 ## package.json
+
 ```json
 {
   "name": "events-api",
@@ -57,6 +58,7 @@ project-root/
 ```
 
 ## tsconfig.json
+
 ```json
 {
   "compilerOptions": {
@@ -79,25 +81,24 @@ project-root/
 ```
 
 ## .eslintrc.js
+
 ```javascript
 module.exports = {
   parser: '@typescript-eslint/parser',
-  extends: [
-    'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended'
-  ],
+  extends: ['plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
   parserOptions: {
     ecmaVersion: 2020,
-    sourceType: 'module'
+    sourceType: 'module',
   },
   rules: {
     '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/no-explicit-any': 'warn'
-  }
+    '@typescript-eslint/no-explicit-any': 'warn',
+  },
 };
 ```
 
 ## .prettierrc
+
 ```json
 {
   "semi": true,
@@ -109,6 +110,7 @@ module.exports = {
 ```
 
 ## .gitignore
+
 ```
 node_modules/
 .env
@@ -119,6 +121,7 @@ dist/
 ```
 
 ## vercel.json
+
 ```json
 {
   "version": 2,
@@ -135,11 +138,13 @@ dist/
 ```
 
 ## .env.example
+
 ```
 FIRESTORE_KEY={"type":"service_account","project_id":"your-project","private_key_id":"..."}
 ```
 
 ## api/hello.ts
+
 ```typescript
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
@@ -152,6 +157,7 @@ export default function hello(req: VercelRequest, res: VercelResponse) {
 ```
 
 ## src/types/index.ts
+
 ```typescript
 export interface Event {
   eventId: string;
@@ -170,6 +176,7 @@ export interface SubmitEventRequest {
 ```
 
 ## .github/workflows/ci.yml
+
 ```yaml
 name: CI
 on: [push, pull_request]

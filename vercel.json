@@ -1,12 +1,8 @@
 {
-  "version": 2,
-  "functions": {
-    "api/*.ts": {
-      "memory": 1024,
-      "maxDuration": 10
+  "builds": [
+    {
+      "src": "api/**/*",
+      "use": "@vercel/node"
     }
-  },
-  "env": {
-    "FIRESTORE_KEY": "@firestore-key"
-  }
+  ]
 }
