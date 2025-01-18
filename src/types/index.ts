@@ -15,7 +15,7 @@ export interface EventData {
   city: string;
   state: string;
   eventUrl: string;
-  eventType: "road" | "cx" | "xc";
+  eventType: 'road' | 'cx' | 'xc';
 }
 
 export interface SubmitEventRequest {
