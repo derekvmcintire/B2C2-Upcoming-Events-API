@@ -22,3 +22,9 @@ export interface SubmitEventRequest {
   url: string;
   eventType: 'road' | 'cx' | 'xc';
 }
+
+export interface GraphQLResponse {
+  data?: {
+    athleticEventByURL?: Event;
+  };
+}
