@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
-export const corsMiddleware = (req: VercelRequest, res: VercelResponse, next: Function) => {
+export const corsMiddleware = (req: VercelRequest, res: VercelResponse, next: () => void): void => {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all origins, or use specific origins like 'http://localhost:5173'
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); // Allow the necessary HTTP methods
