@@ -9,6 +9,19 @@ if (!admin.apps.length) {
   });
 }
 
+/**
+ * Handles fetching events from Firestore based on the event type and optional start date.
+ * 
+ * @param req - The HTTP request object containing query parameters for event type and start date.
+ * @param res - The HTTP response object used to send the event data or error response.
+ * 
+ * @returns A JSON response with the list of events based on the requested parameters:
+ *  - Status 200 with the events array if events are found.
+ *  - Status 200 with an empty events array if no events match the query.
+ *  - Status 400 if the event type is invalid or the date format is incorrect.
+ *  - Status 405 for method not allowed (non-GET requests).
+ *  - Status 500 for internal server errors.
+ */
 export default async function getEventsByType(req: VercelRequest, res: VercelResponse) {
   // Only allow GET requests
   if (req.method !== "GET") {
