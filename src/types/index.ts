@@ -28,3 +28,8 @@ export interface GraphQLResponse {
     athleticEventByURL?: Event;
   };
 }
+
+export interface GetEventsQuery {
+  type: string;
+  startDate: string;
+}

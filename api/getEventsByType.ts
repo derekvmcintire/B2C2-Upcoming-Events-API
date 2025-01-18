@@ -1,67 +1,59 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import admin from 'firebase-admin';
-import { type Event } from '../src/types/index';
-
-// Initialize Firebase Admin SDK
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(JSON.parse(process.env.FIRESTORE_KEY || '')),
-  });
-}
+import { validateEventQuery } from '../src/utils/validation';
+import { getCurrentDate } from '../src/utils/dates';
+import { fetchEventsByType } from '../src/utils/firebase';
+import { GetEventsQuery } from '../src/types';
 
 /**
- * Handles fetching events from Firestore based on the event type and optional start date.
+ * Handles the retrieval of events by type.
  *
- * @param req - The HTTP request object containing query parameters for event type and start date.
- * @param res - The HTTP response object used to send the event data or error response.
+ * This function processes a GET request with query parameters specifying the event type
+ * and an optional start date. It validates the query parameters, retrieves events from Firebase,
+ * and returns them as a response.
  *
- * @returns A JSON response with the list of events based on the requested parameters:
- *  - Status 200 with the events array if events are found.
- *  - Status 200 with an empty events array if no events match the query.
- *  - Status 400 if the event type is invalid or the date format is incorrect.
- *  - Status 405 for method not allowed (non-GET requests).
- *  - Status 500 for internal server errors.
+ * @param {VercelRequest} req - The incoming HTTP request, expected to include query parameters.
+ * @param {VercelResponse} res - The HTTP response object used to send a response back to the client.
+ * @returns {Promise<VercelResponse>} A promise that resolves when the response is sent.
+ *
+ * @example
+ * // Request
+ * GET /api/getEventsByType?type=road&startDate=2025-01-01
+ *
+ * // Response (success)
+ * {
+ *   events: [
+ *     { eventId: '1', name: 'Marathon', date: '2025-01-02', city: 'Boston', state: 'MA', eventType: 'road' },
+ *     { eventId: '2', name: '10K Run', date: '2025-01-03', city: 'New York', state: 'NY', eventType: 'road' }
+ *   ]
+ * }
+ *
+ * // Response (failure - validation error)
+ * {
+ *   error: 'Invalid query parameters'
+ * }
  */
-export default async function getEventsByType(req: VercelRequest, res: VercelResponse) {
-  // Only allow GET requests
+export default async function getEventsByType(
+  req: VercelRequest,
+  res: VercelResponse
+): Promise<VercelResponse> {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { type, startDate = new Date().toISOString().split('T')[0] } = req.query;
+    const query: GetEventsQuery = {
+      type: req.query.type as string,
+      startDate: (req.query.startDate as string) || getCurrentDate(),
+    };
 
-    // Validate type parameter
-    if (!type || typeof type !== 'string' || !['road', 'cx', 'xc'].includes(type.toLowerCase())) {
-      return res.status(400).json({ error: 'Invalid event type. Must be one of: road, cx, xc' });
+    // Validate query parameters
+    const validationError = validateEventQuery(query);
+    if (validationError) {
+      return res.status(400).json({ error: validationError });
     }
 
-    // Validate startDate format if provided
-    if (startDate && !/^\d{4}-\d{2}-\d{2}$/.test(startDate.toString())) {
-      return res.status(400).json({ error: 'Invalid date format. Use YYYY-MM-DD' });
-    }
-
-    const db = admin.firestore();
-
-    // Query events collection
-    const eventsRef = db
-      .collection('events')
-      .doc(type.toLowerCase())
-      .collection('events')
-      .where('date', '>=', startDate)
-      .orderBy('date', 'asc');
-
-    const snapshot = await eventsRef.get();
-
-    if (snapshot.empty) {
-      return res.status(200).json({ events: [] });
-    }
-
-    // Convert snapshot to array of events
-    const events: Event[] = snapshot.docs.map((doc) => ({
-      ...(doc.data() as Event),
-      eventId: doc.id,
-    }));
+    // Fetch events
+    const events = await fetchEventsByType(query.type, query.startDate);
 
     return res.status(200).json({ events });
   } catch (error) {

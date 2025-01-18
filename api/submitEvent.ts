@@ -4,7 +4,40 @@ import { fetchEventData } from '../src/utils/api';
 import { storeEvent } from '../src/utils/firebase';
 import { type Event, type SubmitEventRequest } from '../src/types';
 
-export default async function submitEvent(req: VercelRequest, res: VercelResponse) {
+/**
+ * Handles the submission of an event.
+ *
+ * This function processes a POST request containing event details, validates the request data,
+ * fetches event information from an external API, and stores the event in Firebase. If the event
+ * already exists, it responds with a conflict status.
+ *
+ * @param {VercelRequest} req - The incoming HTTP request from Vercel, expected to be a POST request with event data.
+ * @param {VercelResponse} res - The HTTP response object used to send a response back to the client.
+ * @returns {Promise<VercelResponse>} A promise that resolves when the response is sent.
+ *
+ * @example
+ * // Request body structure
+ * const requestBody = {
+ *   url: 'https://example.com/event',
+ *   eventType: 'road',
+ * };
+ *
+ * // Response (success)
+ * {
+ *   success: true,
+ *   message: 'Event successfully added',
+ *   eventId: '12345',
+ * }
+ *
+ * // Response (failure)
+ * {
+ *   error: 'Event not found',
+ * }
+ */
+export default async function submitEvent(
+  req: VercelRequest,
+  res: VercelResponse
+): Promise<VercelResponse> {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -30,9 +63,20 @@ export default async function submitEvent(req: VercelRequest, res: VercelRespons
       eventType: requestData.eventType,
     };
 
-    await storeEvent(event);
+    const { isNew } = await storeEvent(event);
 
-    return res.status(200).json({ success: true, eventId: event.eventId });
+    if (!isNew) {
+      return res.status(409).json({
+        message: 'Event already exists',
+        eventId: event.eventId,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Event successfully added',
+      eventId: event.eventId,
+    });
   } catch (error) {
     console.error('Error submitting event:', error);
     return res.status(500).json({ error: 'Internal server error' });
