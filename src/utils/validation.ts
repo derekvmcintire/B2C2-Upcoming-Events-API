@@ -1,4 +1,4 @@
-import { type SubmitEventRequest } from '../types';
+import { GetEventsQuery, type SubmitEventRequest } from '../types';
 
 export function validateEventType(eventType: string): boolean {
   return ['road', 'cx', 'xc'].includes(eventType);
@@ -24,6 +24,20 @@ export function validateRequest(req: SubmitEventRequest): string | null {
 
   if (!validateUrl(req.url)) {
     return 'Invalid URL. Only bikereg.com URLs are allowed';
+  }
+
+  return null;
+}
+
+export function validateEventQuery(query: GetEventsQuery): string | null {
+  const { type, startDate } = query;
+
+  if (!type || typeof type !== 'string' || !['road', 'cx', 'xc'].includes(type.toLowerCase())) {
+    return 'Invalid event type. Must be one of: road, cx, xc';
+  }
+
+  if (startDate && !/^\d{4}-\d{2}-\d{2}$/.test(startDate.toString())) {
+    return 'Invalid date format. Use YYYY-MM-DD';
   }
 
   return null;

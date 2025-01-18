@@ -37,3 +37,28 @@ export async function storeEvent(event: Event): Promise<{ isNew: boolean }> {
 
   return { isNew: true };
 }
+
+export async function fetchEventsByType(
+  type: string,
+  startDate: string
+): Promise<Event[]> {
+  const db = admin.firestore();
+  
+  const eventsRef = db
+    .collection('events')
+    .doc(type.toLowerCase())
+    .collection('events')
+    .where('date', '>=', startDate)
+    .orderBy('date', 'asc');
+
+  const snapshot = await eventsRef.get();
+
+  if (snapshot.empty) {
+    return [];
+  }
+
+  return snapshot.docs.map((doc) => ({
+    ...(doc.data() as Event),
+    eventId: doc.id,
+  }));
+}
