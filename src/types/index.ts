@@ -31,5 +31,5 @@ export interface GraphQLResponse {
 
 export interface GetEventsQuery {
   type: string;
-  startDate?: string;
+  startDate: string;
 }

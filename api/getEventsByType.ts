@@ -1,7 +1,8 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { validateEventQuery, type GetEventsQuery } from '../src/utils/validation';
+import { validateEventQuery } from '../src/utils/validation';
 import { getCurrentDate } from '../src/utils/dates';
 import { fetchEventsByType } from '../src/utils/firebase';
+import { GetEventsQuery } from '../src/types';
 
 export default async function getEventsByType(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
