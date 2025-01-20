@@ -145,6 +145,10 @@ project-root/
 └── README.md
 ```
 
+## System Architecture
+
+![B2C2CalendarSystemDesign drawio (2)](https://github.com/user-attachments/assets/fdc9ae94-d61d-47d9-bc89-00886d799107)
+
 ## Future Considerations
 
 - Consider implementing rate limiting
