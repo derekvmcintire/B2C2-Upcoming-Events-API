@@ -1,67 +1,28 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
-import { EventType } from '../src/types'; // Adjust the import path based on your file structure
-import { validateEventQuery } from '../src/utils/validation';
-import { getCurrentDate } from '../src/utils/dates';
-import { fetchEventsByType } from '../src/utils/firebase';
-import { corsMiddleware } from '../src/middleware/cors';
-import getEventsByType from './getEventsByType';
+// getEventsByType.test.ts
 
-jest.mock('../src/middleware/cors', () => ({
+import { VercelRequest } from '@vercel/node';
+import { validateEventQuery } from '../../src/utils/validation';
+import { getCurrentDate } from '../../src/utils/dates';
+import { fetchEventsByType } from '../../src/utils/firebase';
+import { corsMiddleware } from '../../src/middleware/cors';
+import getEventsByType from '../getEventsByType';
+import { createMockResponse, mockEvents } from './utils/mock-utils';
+
+jest.mock('../../src/middleware/cors', () => ({
   corsMiddleware: jest.fn((_req, _res, next) => next()),
 }));
 
-jest.mock('../src/utils/validation', () => ({
+jest.mock('../../src/utils/validation', () => ({
   validateEventQuery: jest.fn(),
 }));
 
-jest.mock('../src/utils/dates', () => ({
+jest.mock('../../src/utils/dates', () => ({
   getCurrentDate: jest.fn(),
 }));
 
-jest.mock('../src/utils/firebase', () => ({
+jest.mock('../../src/utils/firebase', () => ({
   fetchEventsByType: jest.fn(),
 }));
-
-const createMockResponse = (): VercelResponse => {
-  const json = jest.fn();
-  const status = jest.fn((statusCode: number) => {
-    mockResponse.statusCode = statusCode; // Set the statusCode on the response
-    return mockResponse; // Return the mock response for chaining
-  });
-
-  const mockResponse = {
-    statusCode: 200, // Default statusCode
-    status,
-    json,
-    setHeader: jest.fn(),
-    getHeader: jest.fn(),
-    end: jest.fn(),
-    send: jest.fn(),
-  } as unknown as VercelResponse;
-
-  return mockResponse;
-};
-
-const mockEvents: EventType[] = [
-  {
-    eventId: '1',
-    eventType: 'road',
-    name: 'Marathon',
-    date: '2025-01-02',
-    city: 'Boston',
-    state: 'MA',
-    eventUrl: 'https://example.com/marathon',
-  },
-  {
-    eventId: '2',
-    eventType: 'road',
-    name: '10K Run',
-    date: '2025-01-03',
-    city: 'New York',
-    state: 'NY',
-    eventUrl: 'https://example.com/10k',
-  },
-];
 
 describe('getEventsByType', () => {
   it('should respond with events when query is valid', async () => {
