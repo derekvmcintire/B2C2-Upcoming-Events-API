@@ -3,7 +3,7 @@ import { corsMiddleware } from '../src/middleware/cors';
 import { validateRequest } from '../src/utils/validation';
 import { fetchEventData } from '../src/utils/api';
 import { storeEvent } from '../src/utils/firebase';
-import { type Event, type SubmitEventRequest } from '../src/types';
+import { type EventType, type SubmitEventRequest } from '../src/types';
 
 /**
  * Handles the submission of an event.
@@ -59,7 +59,7 @@ export default async function submitEvent(req: VercelRequest, res: VercelRespons
       }
 
       // Prepare and store event
-      const event: Event = {
+      const event: EventType = {
         ...eventData,
         eventType: requestData.eventType,
       };

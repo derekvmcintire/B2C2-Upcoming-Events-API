@@ -1,6 +1,6 @@
 // src/utils/firebase.ts
 import admin from 'firebase-admin';
-import { type Event } from '../types';
+import { type EventType } from '../types';
 
 /**
  * Initializes the Firebase Firestore instance if it hasn't been initialized yet.
@@ -38,10 +38,10 @@ export async function checkEventExists(eventId: string, eventType: string): Prom
 /**
  * Stores a new event in the Firestore database if it does not already exist.
  *
- * @param {Event} event - The event object to store.
+ * @param {EventType} event - The event object to store.
  * @returns {Promise<{ isNew: boolean }>} A promise that resolves to an object indicating if the event is new.
  */
-export async function storeEvent(event: Event): Promise<{ isNew: boolean }> {
+export async function storeEvent(event: EventType): Promise<{ isNew: boolean }> {
   const exists = await checkEventExists(event.eventId, event.eventType);
 
   if (exists) {
@@ -64,9 +64,9 @@ export async function storeEvent(event: Event): Promise<{ isNew: boolean }> {
  *
  * @param {string} type - The type of the events to fetch (e.g., road, cx, xc).
  * @param {string} startDate - The start date to filter events (formatted as YYYY-MM-DD).
- * @returns {Promise<Event[]>} A promise that resolves to an array of events matching the criteria.
+ * @returns {Promise<EventType[]>} A promise that resolves to an array of events matching the criteria.
  */
-export async function fetchEventsByType(type: string, startDate: string): Promise<Event[]> {
+export async function fetchEventsByType(type: string, startDate: string): Promise<EventType[]> {
   const db = initializeFirebase();
 
   const eventsRef = db
@@ -83,7 +83,7 @@ export async function fetchEventsByType(type: string, startDate: string): Promis
   }
 
   return snapshot.docs.map((doc) => ({
-    ...(doc.data() as Event),
+    ...(doc.data() as EventType),
     eventId: doc.id,
   }));
 }

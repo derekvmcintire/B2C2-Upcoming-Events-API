@@ -1,4 +1,4 @@
-export interface Event {
+export interface EventType {
   eventId: string;
   eventType: 'road' | 'cx' | 'xc';
   name: string;
@@ -25,7 +25,7 @@ export interface SubmitEventRequest {
 
 export interface GraphQLResponse {
   data?: {
-    athleticEventByURL?: Event;
+    athleticEventByURL?: EventType;
   };
 }
 
