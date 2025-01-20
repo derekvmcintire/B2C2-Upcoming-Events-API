@@ -1,4 +1,127 @@
-# B2C2-Upcoming-Events-API# Project Structure
+# B2C2 Events API
+
+This API provides serverless functions for managing cycling event data, integrating with Firebase Firestore and a third-party BikeReg GraphQL API. The service is primarily used by the B2C2 cycling team's Event Calendar application for internal event tracking.
+
+## Technology Stack
+
+- TypeScript
+- Vercel (Serverless Functions)
+- Firebase Firestore
+- Node.js (>= 18.0.0)
+
+## API Endpoints
+
+### GET /hello
+Test endpoint to verify API functionality.
+
+### GET /getEventsByType
+Retrieves a list of events from the Firestore database filtered by type.
+
+#### Parameters
+- `type` (required): Type of events to retrieve (road, cx, xc)
+
+#### Example Request
+```http
+GET https://b2c2-events-api.vercel.app/api/getEventsByType?type=road
+```
+
+#### Success Response
+```json
+{
+    "events": [
+        {
+            "eventId": "69168",
+            "name": "The Frozen Four 2025: Matt Catania Memorial",
+            "date": "2025-03-02T00:00:00.000-05:00",
+            "city": "Farmington",
+            "state": "CT",
+            "eventUrl": "https://www.bikereg.com/the-frozen-four-1-2025",
+            "eventType": "road"
+        }
+    ]
+}
+```
+
+#### Error Response
+```json
+{
+    "error": "Invalid event type. Must be one of: road, cx, xc"
+}
+```
+
+### POST /submitEvent
+Submits a new event by retrieving event information from the BikeReg GraphQL API and storing it in the Firestore database.
+
+#### Request Body
+- `url` (required): Must be a valid BikeReg.com URL
+
+#### Example Request
+```http
+POST https://b2c2-events-api.vercel.app/api/submitEvent
+```
+
+#### Success Response
+```json
+{
+    "success": true,
+    "eventId": "69168"
+}
+```
+
+#### Duplicate Event Response
+```json
+{
+    "message": "Event already exists",
+    "eventId": "69177"
+}
+```
+
+#### Error Response
+```json
+{
+    "error": "Invalid URL. Only bikereg.com URLs are allowed"
+}
+```
+
+## Development
+
+### Prerequisites
+- Node.js >= 18.0.0
+- npm
+- Vercel CLI
+- Firebase project with Firestore database
+
+### Available Scripts
+
+- `npm run dev`: Start local development server using Vercel
+- `npm run deploy`: Deploy to Vercel production environment
+- `npm run lint`: Run ESLint for TypeScript files
+- `npm run format`: Format code using Prettier
+- `npm run type-check`: Run TypeScript type checking
+
+### CI/CD
+
+The project uses GitHub Actions for continuous integration, running the following checks on push and pull requests:
+- npm installation
+- Linting
+- Type checking
+
+### Configuration
+
+#### Firebase
+- Currently using Firebase Firestore (Free Tier)
+- Database credentials are stored in Vercel environment variables
+
+#### Environment Variables Required
+- Firebase configuration/credentials (stored in Vercel)
+
+## Security Notes
+
+- API validates BikeReg URLs before processing
+- Events are stored in typed collections in Firestore
+- Firebase credentials should be kept secure in Vercel environment variables
+
+## Project Structure
 
 ```
 project-root/
@@ -22,173 +145,11 @@ project-root/
 └── README.md
 ```
 
-# Configuration Files
+## Future Considerations
 
-## package.json
+- Consider implementing rate limiting
+- Add authentication for protected endpoints
+- Implement caching for frequently accessed data
+- Add monitoring and logging solutions
 
-```json
-{
-  "name": "events-api",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "vercel dev",
-    "deploy": "vercel deploy --prod",
-    "lint": "eslint . --ext .ts",
-    "format": "prettier --write \"**/*.{ts,json,md}\"",
-    "type-check": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@vercel/node": "^3.0.0",
-    "firebase-admin": "^11.11.0",
-    "node-fetch": "^2.7.0"
-  },
-  "devDependencies": {
-    "@types/node": "^20.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.0.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
-    "prettier": "^3.0.0",
-    "typescript": "^5.0.0",
-    "vercel": "^32.0.0"
-  }
-}
-```
-
-## tsconfig.json
-
-```json
-{
-  "compilerOptions": {
-    "target": "es2020",
-    "module": "commonjs",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "dist",
-    "rootDir": ".",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
-  },
-  "include": ["api/**/*", "src/**/*"],
-  "exclude": ["node_modules"]
-}
-```
-
-## .eslintrc.js
-
-```javascript
-module.exports = {
-  parser: '@typescript-eslint/parser',
-  extends: ['plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
-  parserOptions: {
-    ecmaVersion: 2020,
-    sourceType: 'module',
-  },
-  rules: {
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/no-explicit-any': 'warn',
-  },
-};
-```
-
-## .prettierrc
-
-```json
-{
-  "semi": true,
-  "trailingComma": "es5",
-  "singleQuote": true,
-  "printWidth": 100,
-  "tabWidth": 2
-}
-```
-
-## .gitignore
-
-```
-node_modules/
-.env
-.env.local
-.vercel
-dist/
-.DS_Store
-```
-
-## vercel.json
-
-```json
-{
-  "version": 2,
-  "functions": {
-    "api/*.ts": {
-      "memory": 1024,
-      "maxDuration": 10
-    }
-  },
-  "env": {
-    "FIRESTORE_KEY": "@firestore-key"
-  }
-}
-```
-
-## .env.example
-
-```
-FIRESTORE_KEY={"type":"service_account","project_id":"your-project","private_key_id":"..."}
-```
-
-## api/hello.ts
-
-```typescript
-import { VercelRequest, VercelResponse } from '@vercel/node';
-
-export default function hello(req: VercelRequest, res: VercelResponse) {
-  const { name = 'World' } = req.query;
-  return res.json({
-    message: `Hello ${name}!`,
-  });
-}
-```
-
-## src/types/index.ts
-
-```typescript
-export interface Event {
-  eventId: string;
-  eventType: 'road' | 'cx' | 'xc';
-  name: string;
-  date: string;
-  city: string;
-  state: string;
-  eventUrl: string;
-}
-
-export interface SubmitEventRequest {
-  url: string;
-  eventType: 'road' | 'cx' | 'xc';
-}
-```
-
-## .github/workflows/ci.yml
-
-```yaml
-name: CI
-on: [push, pull_request]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run type-check
-```
+For questions or issues, please open a GitHub issue in the repository.
