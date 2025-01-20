@@ -12,80 +12,93 @@ This API provides serverless functions for managing cycling event data, integrat
 ## API Endpoints
 
 ### GET /hello
+
 Test endpoint to verify API functionality.
 
 ### GET /getEventsByType
+
 Retrieves a list of events from the Firestore database filtered by type.
 
 #### Parameters
+
 - `type` (required): Type of events to retrieve (road, cx, xc)
 
 #### Example Request
+
 ```http
 GET https://b2c2-events-api.vercel.app/api/getEventsByType?type=road
 ```
 
 #### Success Response
+
 ```json
 {
-    "events": [
-        {
-            "eventId": "69168",
-            "name": "The Frozen Four 2025: Matt Catania Memorial",
-            "date": "2025-03-02T00:00:00.000-05:00",
-            "city": "Farmington",
-            "state": "CT",
-            "eventUrl": "https://www.bikereg.com/the-frozen-four-1-2025",
-            "eventType": "road"
-        }
-    ]
+  "events": [
+    {
+      "eventId": "69168",
+      "name": "The Frozen Four 2025: Matt Catania Memorial",
+      "date": "2025-03-02T00:00:00.000-05:00",
+      "city": "Farmington",
+      "state": "CT",
+      "eventUrl": "https://www.bikereg.com/the-frozen-four-1-2025",
+      "eventType": "road"
+    }
+  ]
 }
 ```
 
 #### Error Response
+
 ```json
 {
-    "error": "Invalid event type. Must be one of: road, cx, xc"
+  "error": "Invalid event type. Must be one of: road, cx, xc"
 }
 ```
 
 ### POST /submitEvent
+
 Submits a new event by retrieving event information from the BikeReg GraphQL API and storing it in the Firestore database.
 
 #### Request Body
+
 - `url` (required): Must be a valid BikeReg.com URL
 
 #### Example Request
+
 ```http
 POST https://b2c2-events-api.vercel.app/api/submitEvent
 ```
 
 #### Success Response
+
 ```json
 {
-    "success": true,
-    "eventId": "69168"
+  "success": true,
+  "eventId": "69168"
 }
 ```
 
 #### Duplicate Event Response
+
 ```json
 {
-    "message": "Event already exists",
-    "eventId": "69177"
+  "message": "Event already exists",
+  "eventId": "69177"
 }
 ```
 
 #### Error Response
+
 ```json
 {
-    "error": "Invalid URL. Only bikereg.com URLs are allowed"
+  "error": "Invalid URL. Only bikereg.com URLs are allowed"
 }
 ```
 
 ## Development
 
 ### Prerequisites
+
 - Node.js >= 18.0.0
 - npm
 - Vercel CLI
@@ -102,6 +115,7 @@ POST https://b2c2-events-api.vercel.app/api/submitEvent
 ### CI/CD
 
 The project uses GitHub Actions for continuous integration, running the following checks on push and pull requests:
+
 - npm installation
 - Linting
 - Type checking
@@ -109,10 +123,12 @@ The project uses GitHub Actions for continuous integration, running the followin
 ### Configuration
 
 #### Firebase
+
 - Currently using Firebase Firestore (Free Tier)
 - Database credentials are stored in Vercel environment variables
 
 #### Environment Variables Required
+
 - Firebase configuration/credentials (stored in Vercel)
 
 ## Security Notes

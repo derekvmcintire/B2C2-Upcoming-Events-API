@@ -17,8 +17,14 @@ describe('hello API', () => {
     hello(req, res);
 
     expect(setHeaderMock).toHaveBeenCalledWith('Access-Control-Allow-Origin', '*');
-    expect(setHeaderMock).toHaveBeenCalledWith('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    expect(setHeaderMock).toHaveBeenCalledWith('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    expect(setHeaderMock).toHaveBeenCalledWith(
+      'Access-Control-Allow-Methods',
+      'GET, POST, OPTIONS'
+    );
+    expect(setHeaderMock).toHaveBeenCalledWith(
+      'Access-Control-Allow-Headers',
+      'Content-Type, Authorization'
+    );
     expect(jsonMock).toHaveBeenCalledWith({
       message: 'Hello World!',
     });
@@ -39,8 +45,14 @@ describe('hello API', () => {
     hello(req, res);
 
     expect(setHeaderMock).toHaveBeenCalledWith('Access-Control-Allow-Origin', '*');
-    expect(setHeaderMock).toHaveBeenCalledWith('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    expect(setHeaderMock).toHaveBeenCalledWith('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    expect(setHeaderMock).toHaveBeenCalledWith(
+      'Access-Control-Allow-Methods',
+      'GET, POST, OPTIONS'
+    );
+    expect(setHeaderMock).toHaveBeenCalledWith(
+      'Access-Control-Allow-Headers',
+      'Content-Type, Authorization'
+    );
     expect(jsonMock).toHaveBeenCalledWith({
       message: 'Hello Alice!',
     });

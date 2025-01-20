@@ -1,34 +1,41 @@
 # Comprehensive API Testing Strategy
+
 ---
 
 ### **1. Types of Tests to Write**
 
 #### **Unit Tests**
+
 - Focus on individual serverless functions (`hello`, `getEventsByType`, `submitEvent`).
 - Mock dependencies like Firestore and BikeReg API to isolate behavior.
 - Ensure all edge cases are covered, especially for validation (e.g., invalid `type` values, malformed URLs).
 
 #### **Integration Tests**
+
 - Test interactions between the API and Firebase Firestore.
 - Include a test environment for Firebase (using Firestore emulator).
 - Verify end-to-end workflows, like fetching events by type or submitting new events.
 
 #### **End-to-End (E2E) Tests**
+
 - Simulate real HTTP requests to the API in a controlled environment (e.g., staging or locally).
 - Validate the full flow, including Firestore data persistence and BikeReg API calls.
 
 #### **Load Tests**
+
 - Evaluate the performance of the API under different traffic levels.
 - Prioritize endpoints like `GET /getEventsByType` since they may face higher traffic.
 - Use tools like **Artillery**, **k6**, or **Locust** for realistic load scenarios.
 
 #### **Security Tests**
+
 - Test for improper handling of invalid or malicious data:
   - SQL/NoSQL injection attempts.
   - Invalid or malformed input (e.g., `type` as `DROP TABLE`).
 - Validate secure handling of Firebase credentials.
 
 #### **Smoke Tests**
+
 - Quick sanity checks on key endpoints (`GET /hello`, `GET /getEventsByType`) to confirm API is functional after deployments.
 
 ---
@@ -36,15 +43,18 @@
 ### **2. Testing Environments**
 
 #### **Local Environment**
+
 - Use the Firestore emulator to run local tests without affecting production data.
 - Test the API locally using `npm run dev` and tools like Postman or Thunder Client.
 - Add tests to ensure compatibility with the local dev environment.
 
 #### **Staging/Preview Environment**
+
 - Use Vercel preview deployments for integration and E2E tests.
 - Isolate this environment from production to avoid interference with real users or data.
 
 #### **Production Environment**
+
 - Avoid running destructive or resource-intensive tests here.
 - Perform lightweight monitoring, such as periodic health checks (e.g., `GET /hello`).
 
@@ -63,6 +73,7 @@ Add the following to your CI/CD pipeline:
    - Automatically run smoke tests against Vercel preview URLs after successful deployment.
 
 Example `ci.yml` additions:
+
 ```yaml
 jobs:
   tests:
@@ -100,12 +111,14 @@ jobs:
 ### **4. Focus on Critical Use Cases**
 
 #### **High-Priority Areas**
+
 - **Validation**: Ensure `type` and `url` parameters are correctly validated.
 - **Error Handling**: Test all possible error scenarios (e.g., missing parameters, invalid input).
 - **Third-Party API Calls**: Mock and test interaction with BikeReg GraphQL API for robustness.
 - **Concurrency**: Verify `submitEvent` handles duplicate events efficiently.
 
 #### **Lower Priority (For Now)**
+
 - Rare edge cases or non-critical features like `GET /hello`.
 
 ---
@@ -113,21 +126,25 @@ jobs:
 ### **5. Tools and Libraries**
 
 #### **Testing Frameworks**
+
 - **Jest**: For unit and integration tests.
 - **Supertest**: To test HTTP endpoints.
 - **Fireorm/Firebase Emulator**: For Firestore integration testing.
 
 #### **Load Testing**
+
 - **Artillery**: Easy to configure for serverless APIs.
 - **k6**: Scriptable and scalable.
 
 #### **E2E Testing**
+
 - **Postman/Newman**: For automated API tests.
 - **Cypress**: If front-end integration is needed.
 
 ---
 
 ### **Next Steps**
+
 1. Start with **unit tests** for `hello`, `getEventsByType`, and `submitEvent`.
 2. Set up the Firestore emulator for **integration tests**.
 3. Create smoke test scripts for CI and deploy pipelines.
