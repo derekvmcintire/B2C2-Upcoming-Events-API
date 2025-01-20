@@ -7,7 +7,8 @@
     "deploy": "vercel deploy --prod",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"**/*.{ts,json,md}\"",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test": "jest"
   },
   "dependencies": {
     "@vercel/node": "^4.0.0",
