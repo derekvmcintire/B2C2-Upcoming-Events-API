@@ -9,12 +9,30 @@ import { type EventType } from '../types';
  */
 function initializeFirebase(): FirebaseFirestore.Firestore {
   if (!admin.apps.length) {
-    admin.initializeApp({
-      credential: admin.credential.cert(JSON.parse(process.env.FIRESTORE_KEY || '')),
-    });
+    if (process.env.NODE_ENV === 'test' || process.env.USE_FIRESTORE_EMULATOR === 'true') {
+      admin.initializeApp({
+        projectId: process.env.FIREBASE_PROJECT_ID,
+      });
+    } else {
+      admin.initializeApp({
+        credential: admin.credential.cert(JSON.parse(process.env.FIRESTORE_KEY || '{}')),
+        projectId: process.env.FIREBASE_PROJECT_ID,
+      });
+
+      if (process.env.FIRESTORE_EMULATOR_HOST) {
+        const db = admin.firestore();
+        db.settings({
+          host: process.env.FIRESTORE_EMULATOR_HOST,
+          ssl: false,
+        });
+        return db;
+      }
+    }
   }
   return admin.firestore();
 }
+
+export { initializeFirebase };
 
 /**
  * Checks if an event exists in the Firestore database.
