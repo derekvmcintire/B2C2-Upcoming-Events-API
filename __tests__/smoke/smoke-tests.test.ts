@@ -11,6 +11,7 @@ if (!API_BASE_URL) {
 
 describe('Smoke Tests', () => {
   it('should perform a smoke test', async () => {
+    console.log("Making request to hello endpoint...");
     const response = await fetch(`${API_BASE_URL}/api/hello`);
     expect(response.status).toBe(200);
   });

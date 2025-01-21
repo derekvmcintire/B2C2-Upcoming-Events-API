@@ -13,8 +13,7 @@
     "test": "jest",
     "test:unit": "jest --config jest.config.js --testPathIgnorePatterns=__tests__/unit",
     "test:integration": "jest --config jest.config.js --testPathIgnorePatterns=__tests__/integration",
-    "test:smoke": "jest --config jest.config.js --testPathIgnorePatterns=__tests__/smoke"
-  },
+    "test:smoke": "jest --config jest.config.js __tests__/smoke"  },
   "dependencies": {
     "@vercel/node": "^4.0.0",
     "firebase-admin": "^12.0.0",
@@ -28,6 +27,7 @@
     "@types/node": "^20.10.5",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
+    "concurrently": "^9.1.2",
     "dotenv": "^16.4.7",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
@@ -37,7 +37,8 @@
     "prettier": "^3.1.1",
     "ts-jest": "^29.2.5",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "wait-on": "^8.0.2"
   },
   "engines": {
     "node": ">=18.0.0"
