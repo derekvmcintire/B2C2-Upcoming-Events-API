@@ -3,7 +3,7 @@ import { type EventType } from '../../src/types';
 import { fetchEventData } from '../../src/utils/api';
 import { storeEvent } from '../../src/utils/firebase';
 import { validateRequest } from '../../src/utils/validation';
-import { handleSubmitEvent } from '../submitEvent';
+import { handleSubmitEvent } from '../../api/submitEvent';
 import { createMockResponse, mockEvents } from './utils/mock-utils';
 
 jest.mock('../../src/utils/validation', () => ({

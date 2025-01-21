@@ -3,7 +3,7 @@ import { validateEventQuery } from '../../src/utils/validation';
 import { getCurrentDate } from '../../src/utils/dates';
 import { fetchEventsByType } from '../../src/utils/firebase';
 import { corsMiddleware } from '../../src/middleware/cors';
-import getEventsByType from '../getEventsByType';
+import getEventsByType from '../../api/getEventsByType';
 import { createMockResponse, mockEvents } from './utils/mock-utils';
 
 jest.mock('../../src/middleware/cors', () => ({

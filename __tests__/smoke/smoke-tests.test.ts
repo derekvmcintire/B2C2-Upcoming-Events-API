@@ -1,3 +1,8 @@
+import dotenv from 'dotenv';
+
+// Load the .env.test file
+dotenv.config({ path: '.env.test' });
+
 const API_BASE_URL = process.env.API_URL;
 
 if (!API_BASE_URL) {
@@ -5,8 +10,8 @@ if (!API_BASE_URL) {
 }
 
 describe('Smoke Tests', () => {
-  it('GET /hello should return 200', async () => {
-    const response = await fetch(`${API_BASE_URL}/hello`);
+  it('should perform a smoke test', async () => {
+    const response = await fetch(`${API_BASE_URL}/api/hello`);
     expect(response.status).toBe(200);
   });
 });
