@@ -4,6 +4,7 @@ import { validateRequest } from '../src/utils/validation';
 import { fetchEventData } from '../src/utils/api';
 import { storeEvent } from '../src/utils/firebase';
 import { type EventType, SubmitEventRequest } from '../src/types';
+import { authMiddleware } from '../src/middleware/auth';
 
 /**
  * Processes an event submission request, performing validation, data fetching, and storage.
@@ -23,6 +24,7 @@ import { type EventType, SubmitEventRequest } from '../src/types';
 export async function handleSubmitEvent(req: VercelRequest, res: VercelResponse): Promise<void> {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
+    return;
   }
 
   try {
@@ -69,18 +71,24 @@ export async function handleSubmitEvent(req: VercelRequest, res: VercelResponse)
 }
 
 /**
- * Serverless endpoint for event submission with CORS support.
+ * Serverless endpoint for event submission with CORS and authentication support.
  * Expects a POST request with a body containing:
  * {
  *   url: string,      // URL of the event
  *   eventType: string // Type of the event
  * }
+ *
+ * Middleware:
+ * - CORS: Ensures cross-origin request compatibility
+ * - Authentication: Validates the request is from an authenticated user
  */
 export default function submitEvent(req: VercelRequest, res: VercelResponse): Promise<void> {
   return new Promise((resolve) => {
     corsMiddleware(req, res, async () => {
-      await handleSubmitEvent(req, res);
-      resolve();
+      authMiddleware(req, res, async () => {
+        await handleSubmitEvent(req, res);
+        resolve();
+      });
     });
   });
 }
