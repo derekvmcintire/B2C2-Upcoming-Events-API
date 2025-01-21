@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import hello from '../hello';
+import hello from '../../api/hello';
 
 describe('hello API', () => {
   it('should respond with "Hello World!" when no name is provided', () => {

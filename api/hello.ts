@@ -1,12 +1,14 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { corsMiddleware } from '../src/middleware/cors';
+import { authMiddleware } from '../src/middleware/auth';
 
 export default function hello(req: VercelRequest, res: VercelResponse): void {
-  // Apply CORS middleware
   corsMiddleware(req, res, () => {
-    const { name = 'World' } = req.query;
-    return res.json({
-      message: `Hello ${name}!`,
+    authMiddleware(req, res, () => {
+      const { name = 'World' } = req.query;
+      return res.json({
+        message: `Hello ${name}!`,
+      });
     });
   });
 }
