@@ -85,10 +85,11 @@ async function startServer() {
       try {
         // For POST requests, parse the body
         if (req.method === 'POST') {
-          const buffers = [];
+          const buffers: Buffer[] = []; // Explicitly type the array to hold Buffer objects
           for await (const chunk of req) {
-            buffers.push(chunk);
+            buffers.push(chunk); // Now this will work because buffers is typed as Buffer[]
           }
+
           const data = Buffer.concat(buffers).toString();
           try {
             (req as any).body = JSON.parse(data);
