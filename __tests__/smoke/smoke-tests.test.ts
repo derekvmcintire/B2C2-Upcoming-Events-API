@@ -9,7 +9,7 @@ const API_BASE_URL = process.env.API_URL;
 const VERCEL_TOKEN = process.env.VERCEL_TOKEN;
 
 console.log("API_BASE_URL in the smoke test file is: ", API_BASE_URL);
-console.log("VERCEL_TOKEN in the smoke test file is: ", VERCEL_TOKEN);
+console.log("VERCEL_TOKEN in the smoke test file iz: ", VERCEL_TOKEN);
 
 if (!API_BASE_URL) {
   throw new Error('API_URL is not defined in CI or local environment');
