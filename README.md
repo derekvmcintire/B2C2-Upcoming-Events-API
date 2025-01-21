@@ -111,6 +111,7 @@ POST https://b2c2-events-api.vercel.app/api/submitEvent
 - `npm run lint`: Run ESLint for TypeScript files
 - `npm run format`: Format code using Prettier
 - `npm run type-check`: Run TypeScript type checking
+- `npm run test`: Run unit and integration tests
 
 ### CI/CD
 
@@ -119,6 +120,7 @@ The project uses GitHub Actions for continuous integration, running the followin
 - npm installation
 - Linting
 - Type checking
+- Unit and Integration tests
 
 ### Configuration
 
@@ -131,11 +133,42 @@ The project uses GitHub Actions for continuous integration, running the followin
 
 - Firebase configuration/credentials (stored in Vercel)
 
+### Testing
+
+#### Unit Testing
+
+Unit tests have been written for all serverless functions and utility functions, mocking dependencies like Firestore and the BikeReg API. These tests focus on the main use cases for core coverage.
+
+#### Integration Testing
+
+Integration tests have been set up for Firebase Firestore, using the Firebase Admin SDK and Firestore Emulator. These tests require the following environment configuration:
+
+- Create a `.env.test` file with the following content:
+
+  ```env
+  FIRESTORE_EMULATOR_HOST=localhost:8080
+  FIREBASE_PROJECT_ID=b2c2-event-calendar
+  USE_FIRESTORE_EMULATOR=true
+  NODE_ENV=test
+  ```
+
+### Local Development with Firestore Emulator
+
+To run integration tests locally, ensure the Firebase Firestore Emulator is running. You can start it by following these steps:
+
+1. Start the emulator with the Firebase CLI:
+
+   ```bash
+   firebase emulators:start --only firestore
+   ```
+
+2. Ensure that the `.env.test` file is configured properly and that the emulator is running.
+
 ## Security Notes
 
-- API validates BikeReg URLs before processing
-- Events are stored in typed collections in Firestore
-- Firebase credentials should be kept secure in Vercel environment variables
+- API validates BikeReg URLs before processing.
+- Events are stored in typed collections in Firestore.
+- Firebase credentials should be kept secure in Vercel environment variables.
 
 ## Project Structure
 
@@ -152,6 +185,7 @@ project-root/
 │   └── types/
 │       └── index.ts
 ├── .env.example
+├── .env.test
 ├── .eslintrc.js
 ├── .gitignore
 ├── .prettierrc
@@ -164,12 +198,3 @@ project-root/
 ## System Architecture
 
 ![B2C2CalendarSystemDesign drawio (2)](https://github.com/user-attachments/assets/fdc9ae94-d61d-47d9-bc89-00886d799107)
-
-## Future Considerations
-
-- Consider implementing rate limiting
-- Add authentication for protected endpoints
-- Implement caching for frequently accessed data
-- Add monitoring and logging solutions
-
-For questions or issues, please open a GitHub issue in the repository.
