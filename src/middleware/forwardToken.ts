@@ -4,6 +4,7 @@ export async function forwardTokenMiddleware(req: VercelRequest, res: VercelResp
   const token = req.headers['authorization'];
 
   if (!token) {
+    console.log('no token found')
     return res.status(401).json({ error: 'Authorization token is required' });
   }
 
