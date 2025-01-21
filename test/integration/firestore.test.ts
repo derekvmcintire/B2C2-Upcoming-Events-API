@@ -9,7 +9,7 @@ describe('Firestore Emulator Integration Test', () => {
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
     process.env.NODE_ENV = 'test';
     process.env.USE_FIRESTORE_EMULATOR = 'true';
-    
+
     // Initialize the database connection
     db = initializeFirebase();
   });
@@ -22,10 +22,10 @@ describe('Firestore Emulator Integration Test', () => {
   beforeEach(async () => {
     // Clear the database before each test
     const collections = await db.listCollections();
-    const deleteOps = collections.map(collection =>
-      collection.get().then(snapshot => {
+    const deleteOps = collections.map((collection) =>
+      collection.get().then((snapshot) => {
         const batch = db.batch();
-        snapshot.forEach(doc => {
+        snapshot.forEach((doc) => {
           batch.delete(doc.ref);
         });
         return batch.commit();
@@ -63,7 +63,7 @@ describe('Firestore Emulator Integration Test', () => {
       title: 'Test Event',
       date: '2024-05-01',
       location: 'Test Location',
-      description: 'Test Description'
+      description: 'Test Description',
     };
 
     // Store the event
@@ -72,12 +72,12 @@ describe('Firestore Emulator Integration Test', () => {
       .doc(testEvent.eventType)
       .collection('events')
       .doc(testEvent.eventId);
-    
+
     await eventRef.set(testEvent);
 
     // Retrieve the event
     const doc = await eventRef.get();
-    
+
     expect(doc.exists).toBe(true);
     expect(doc.data()).toEqual(testEvent);
   }, 10000);

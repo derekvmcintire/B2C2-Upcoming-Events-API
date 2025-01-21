@@ -18,12 +18,12 @@ function initializeFirebase(): FirebaseFirestore.Firestore {
         credential: admin.credential.cert(JSON.parse(process.env.FIRESTORE_KEY || '{}')),
         projectId: process.env.FIREBASE_PROJECT_ID,
       });
-      
+
       if (process.env.FIRESTORE_EMULATOR_HOST) {
         const db = admin.firestore();
         db.settings({
           host: process.env.FIRESTORE_EMULATOR_HOST,
-          ssl: false
+          ssl: false,
         });
         return db;
       }
@@ -32,9 +32,7 @@ function initializeFirebase(): FirebaseFirestore.Firestore {
   return admin.firestore();
 }
 
-
 export { initializeFirebase };
-
 
 /**
  * Checks if an event exists in the Firestore database.
