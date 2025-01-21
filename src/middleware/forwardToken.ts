@@ -8,7 +8,6 @@ export async function forwardTokenMiddleware(
   const authHeader = req.headers['authorization'];
 
   if (!authHeader) {
-    console.log('no token found');
     return res.status(401).json({ error: 'Authorization token is required' });
   }
 

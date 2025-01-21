@@ -7,7 +7,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-console.log('API_SECRET_KEY exists:', !!process.env.API_SECRET_KEY);
 
 const PORT = 5173;
 
