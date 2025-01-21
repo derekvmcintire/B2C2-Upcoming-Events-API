@@ -1,6 +1,4 @@
-// getEventsByType.test.ts
-
-import { VercelRequest } from '@vercel/node';
+import { type VercelRequest } from '@vercel/node';
 import { validateEventQuery } from '../../src/utils/validation';
 import { getCurrentDate } from '../../src/utils/dates';
 import { fetchEventsByType } from '../../src/utils/firebase';
