@@ -1,5 +1,5 @@
-import { SubmitEventRequest, GetEventsQuery } from "../../types";
-import { validateEventType, validateUrl, validateRequest, validateEventQuery } from "../validation";
+import { SubmitEventRequest, GetEventsQuery } from '../../types';
+import { validateEventType, validateUrl, validateRequest, validateEventQuery } from '../validation';
 
 describe('Utility Functions', () => {
   describe('validateEventType', () => {
@@ -44,17 +44,23 @@ describe('Utility Functions', () => {
 
     it('should return "Missing required fields" for missing fields', () => {
       const incompleteRequest = { url: '', eventType: '' };
-      expect(validateRequest(incompleteRequest as SubmitEventRequest)).toBe('Missing required fields');
+      expect(validateRequest(incompleteRequest as SubmitEventRequest)).toBe(
+        'Missing required fields'
+      );
     });
 
     it('should return "Invalid event type" for an invalid event type', () => {
       const invalidEventTypeRequest = { ...validRequest, eventType: 'invalid' };
-      expect(validateRequest(invalidEventTypeRequest as SubmitEventRequest)).toBe('Invalid event type');
+      expect(validateRequest(invalidEventTypeRequest as SubmitEventRequest)).toBe(
+        'Invalid event type'
+      );
     });
 
     it('should return "Invalid URL. Only bikereg.com URLs are allowed" for an invalid URL', () => {
       const invalidUrlRequest = { ...validRequest, url: 'https://www.example.com' };
-      expect(validateRequest(invalidUrlRequest)).toBe('Invalid URL. Only bikereg.com URLs are allowed');
+      expect(validateRequest(invalidUrlRequest)).toBe(
+        'Invalid URL. Only bikereg.com URLs are allowed'
+      );
     });
   });
 
@@ -66,7 +72,9 @@ describe('Utility Functions', () => {
 
     it('should return an error message for invalid event type in query', () => {
       const invalidTypeQuery: GetEventsQuery = { type: 'invalid', startDate: '2025-01-20' };
-      expect(validateEventQuery(invalidTypeQuery)).toBe('Invalid event type. Must be one of: road, cx, xc');
+      expect(validateEventQuery(invalidTypeQuery)).toBe(
+        'Invalid event type. Must be one of: road, cx, xc'
+      );
     });
 
     it('should return an error message for invalid date format in query', () => {
