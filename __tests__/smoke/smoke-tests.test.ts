@@ -14,7 +14,11 @@ if (!API_BASE_URL) {
 describe('Smoke Tests', () => {
   it('should perform a smoke test', async () => {
     console.log("Making request to hello endpoint...");
-    const response = await fetch(`${API_BASE_URL}/api/hello`);
+    const response = await fetch(`${API_BASE_URL}/api/hello`, {
+      headers: {
+        Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`,
+      },
+    });
     expect(response.status).toBe(200);
   });
 });
