@@ -15,16 +15,16 @@ const PORT = 5173;
 function createVercelResponse(res: any): VercelResponse {
   const vercelRes = {
     ...res,
-    status: function(statusCode: number) {
+    status: function (statusCode: number) {
       res.statusCode = statusCode;
-      return this;  // Return the vercelRes object for chaining
+      return this; // Return the vercelRes object for chaining
     },
-    json: function(body: any) {
+    json: function (body: any) {
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify(body));
       return this;
     },
-    send: function(body: any) {
+    send: function (body: any) {
       if (typeof body === 'object') {
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(body));
@@ -33,10 +33,10 @@ function createVercelResponse(res: any): VercelResponse {
       }
       return this;
     },
-    setHeader: function(name: string, value: string) {
+    setHeader: function (name: string, value: string) {
       res.setHeader(name, value);
       return this;
-    }
+    },
   } as VercelResponse;
 
   return vercelRes;
@@ -57,7 +57,7 @@ async function loadHandlers() {
   const apiDir = join(process.cwd(), 'api');
   const files = await readdir(apiDir);
   const handlers = new Map();
-  
+
   for (const file of files) {
     if (file.endsWith('.ts')) {
       const route = '/api/' + file.replace('.ts', '');
@@ -65,13 +65,13 @@ async function loadHandlers() {
       handlers.set(route, module.default);
     }
   }
-  
+
   return handlers;
 }
 
 async function startServer() {
   const handlers = await loadHandlers();
-  
+
   const server = createServer(async (req, res) => {
     // Set CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -87,7 +87,7 @@ async function startServer() {
 
     const { pathname, query } = parse(req.url || '', true);
     const handler = handlers.get(pathname);
-    
+
     if (handler) {
       try {
         // For POST requests, parse the body
@@ -122,7 +122,7 @@ async function startServer() {
       res.end(JSON.stringify({ error: `Not Found: ${pathname}` }));
     }
   });
-  
+
   server.listen(PORT, () => {
     console.log(`Development server running on http://localhost:${PORT}`);
     console.log('Available routes:', Array.from(handlers.keys()).join(', '));

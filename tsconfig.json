@@ -13,6 +13,13 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["api/**/*", "src/**/*", "__tests__/unit/utils", "__tests__/unit/getEventsByType.test.ts", "__tests__/unit/submitEvent.test.ts", "__tests__/unit/hello.test.ts"],
+  "include": [
+    "api/**/*",
+    "src/**/*",
+    "__tests__/unit/utils",
+    "__tests__/unit/getEventsByType.test.ts",
+    "__tests__/unit/submitEvent.test.ts",
+    "__tests__/unit/hello.test.ts"
+  ],
   "exclude": ["node_modules"]
 }

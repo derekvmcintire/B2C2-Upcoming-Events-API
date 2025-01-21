@@ -6,7 +6,7 @@ export async function authMiddleware(req: VercelRequest, res: VercelResponse, ne
   console.log('Full request:', {
     headers: req.headers,
     method: req.method,
-    url: req.url
+    url: req.url,
   });
 
   const headers = req.headers || {};
@@ -16,7 +16,7 @@ export async function authMiddleware(req: VercelRequest, res: VercelResponse, ne
   console.log('Auth check:', {
     hasApiKey: !!apiKey,
     hasExpectedKey: !!expectedApiKey,
-    headersPresent: Object.keys(headers)
+    headersPresent: Object.keys(headers),
   });
 
   if (!expectedApiKey) {

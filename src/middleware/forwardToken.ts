@@ -1,6 +1,10 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
-export async function forwardTokenMiddleware(req: VercelRequest, res: VercelResponse, next: Function) {
+export async function forwardTokenMiddleware(
+  req: VercelRequest,
+  res: VercelResponse,
+  next: Function
+) {
   const authHeader = req.headers['authorization'];
 
   if (!authHeader) {
@@ -10,7 +14,7 @@ export async function forwardTokenMiddleware(req: VercelRequest, res: VercelResp
 
   // Verify it's a Bearer token
   const [type, token] = authHeader.split(' ');
-  
+
   if (type !== 'Bearer' || !token) {
     return res.status(401).json({ error: 'Invalid authorization format' });
   }

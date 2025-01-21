@@ -24,21 +24,21 @@ describe('Smoke Tests', () => {
   });
 
   it('should perform a smoke test', async () => {
-    console.log("Making request to hello endpoint...");
+    console.log('Making request to hello endpoint...');
     try {
       const response = await fetch(`${API_BASE_URL}/api/hello`, {
         headers: {
           'x-api-key': API_SECRET_KEY,
-          'Accept': 'application/json'
-        }
+          Accept: 'application/json',
+        },
       });
-      
+
       if (response.status !== 200) {
         const text = await response.text();
         console.log('Response status:', response.status);
         console.log('Response body:', text);
       }
-      
+
       expect(response.status).toBe(200);
     } catch (error) {
       console.error('Fetch error:', error);
