@@ -41,7 +41,9 @@ jobs:
       - name: Run Smoke Tests
         env:
           API_URL: ${{ env.API_URL }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_API_TOKEN }}
           NODE_ENV: test
         run: |
           echo "Running tests with API_URL: $API_URL"
+          echo "Vercel token is: "
           npm run test:smoke
