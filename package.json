@@ -9,7 +9,7 @@
     "format": "prettier --write \"**/*.{ts,json,md}\"",
     "type-check": "tsc --noEmit",
     "test": "jest",
-    "smoke-test": "jest smoke-tests.test.js"
+    "smoke-test": "jest --config jest.config.js __tests__/smoke-tests.test.ts"
   },
   "dependencies": {
     "@vercel/node": "^4.0.0",
@@ -24,6 +24,7 @@
     "@types/node": "^20.10.5",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
+    "dotenv": "^16.4.7",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.0",
