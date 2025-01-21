@@ -6,7 +6,7 @@ if (process.env.CI !== 'true') {
 }
 
 const API_BASE_URL = process.env.API_URL;
-const VERCEL_TOKEN = process.env.VERCEL_API_TOKEN;
+const VERCEL_TOKEN = process.env.VERCEL_TOKEN;
 
 console.log("API_BASE_URL in the smoke test file is: ", API_BASE_URL);
 console.log("VERCEL_TOKEN in the smoke test file is: ", VERCEL_TOKEN);
