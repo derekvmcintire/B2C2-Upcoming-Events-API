@@ -3,37 +3,43 @@ import { parse } from 'url';
 import { join } from 'path';
 import { readdir } from 'fs/promises';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+console.log('API_SECRET_KEY exists:', !!process.env.API_SECRET_KEY);
 
 const PORT = 5173;
 
 // Create a Vercel-like response object
 function createVercelResponse(res: any): VercelResponse {
-  return {
+  const vercelRes = {
     ...res,
-    status: (statusCode: number) => {
+    status: function(statusCode: number) {
       res.statusCode = statusCode;
-      return res;
+      return this;  // Return the vercelRes object for chaining
     },
-    json: (body: any) => {
+    json: function(body: any) {
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify(body));
-      return res;
+      return this;
     },
-    send: (body: any) => {
+    send: function(body: any) {
       if (typeof body === 'object') {
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(body));
       } else {
         res.end(body);
       }
-      return res;
+      return this;
     },
-    setHeader: (name: string, value: string) => {
+    setHeader: function(name: string, value: string) {
       res.setHeader(name, value);
-      return res;
-    },
-    // Add other Vercel response methods as needed
+      return this;
+    }
   } as VercelResponse;
+
+  return vercelRes;
 }
 
 // Create a Vercel-like request object
@@ -41,8 +47,9 @@ function createVercelRequest(req: any, query: any): VercelRequest {
   return {
     ...req,
     query,
+    headers: req.headers || {}, // Explicitly include headers
     cookies: {},
-    body: null as any, // Will be populated for POST requests
+    body: null as any,
   } as VercelRequest;
 }
 
@@ -69,7 +76,7 @@ async function startServer() {
     // Set CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-api-key');
 
     // Handle OPTIONS requests for CORS
     if (req.method === 'OPTIONS') {
