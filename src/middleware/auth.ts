@@ -49,7 +49,7 @@ export async function authMiddleware(req: VercelRequest, res: VercelResponse, ne
 
   // Validate the provided API key against the expected key
   if (apiKey !== expectedApiKey) {
-    console.log('Invalid API key provided');
+    console.log('Invalid API key provided: ', apiKey);
     return res.status(401).end(JSON.stringify({ error: 'Invalid API key' }));
   }
 
