@@ -28,6 +28,6 @@ jobs:
 
       # Smoke tests
       - name: Run Smoke Tests
-        run: npm run smoke-test
+        run: npm run test:smoke
         env:
           API_URL: ${{ env.PREVIEW_URL }}
