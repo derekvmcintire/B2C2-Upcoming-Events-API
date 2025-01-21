@@ -60,7 +60,7 @@ export function validateEventQuery(query: GetEventsQuery): string | null {
     return 'Invalid event type. Must be one of: road, cx, xc';
   }
 
-  if (startDate && !/^\d{4}-\d{2}-\d{2}$/.test(startDate.toString())) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate.toString())) {
     return 'Invalid date format. Use YYYY-MM-DD';
   }
 
