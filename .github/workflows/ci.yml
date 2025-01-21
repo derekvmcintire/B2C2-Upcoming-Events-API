@@ -15,9 +15,9 @@ jobs:
         id: vercel-deploy
         uses: amondnet/vercel-action@v20
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Add your Vercel token in GitHub Secrets
-          vercel-args: "--prod=false" # Ensure it deploys to a preview environment
-          working-directory: . # Update if your API is in a subdirectory
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-args: "--prod=false" # Deploy to preview environment
+          working-directory: .
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -28,6 +28,6 @@ jobs:
 
       # Smoke tests
       - name: Run Smoke Tests
-        run: npm run test:smoke
+        run: npm run smoke-test
         env:
-          API_URL: ${{ env.PREVIEW_URL }}
+          API_URL: ${{ env.PREVIEW_URL }}  # Use PREVIEW_URL as API_URL for tests
