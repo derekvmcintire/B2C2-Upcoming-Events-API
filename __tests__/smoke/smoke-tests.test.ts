@@ -5,6 +5,8 @@ dotenv.config({ path: '.env.test' });
 
 const API_BASE_URL = process.env.API_URL;
 
+console.log("API_BASE_URL in the smoke test file is: ", API_BASE_URL)
+
 if (!API_BASE_URL) {
   throw new Error('API_URL is not defined in CI or local environment');
 }
