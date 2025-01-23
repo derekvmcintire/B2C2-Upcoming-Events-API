@@ -1,4 +1,9 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
+import dotenv from 'dotenv';
+
+if (process.env.CI !== 'true') {
+  dotenv.config({ path: '.env.test' });
+}
 
 /**
  * Middleware function to enforce API key-based authentication for incoming requests.
@@ -16,13 +21,6 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
  *          or calls `next()` if authentication is successful.
  */
 export async function authMiddleware(req: VercelRequest, res: VercelResponse, next: Function) {
-  // Debug logging for the full request object
-  console.log('Full request:', {
-    headers: req.headers,
-    method: req.method,
-    url: req.url,
-  });
-
   // Extract headers and API key from the incoming request
   const headers = req.headers || {};
   const apiKey = headers['x-api-key'] || headers['X-API-KEY'];

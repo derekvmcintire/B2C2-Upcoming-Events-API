@@ -1,5 +1,10 @@
 import { SubmitEventRequest, GetEventsQuery } from '../../../src/types';
-import { validateEventType, validateUrl, validateRequest, validateEventQuery } from '../../../src/utils/validation';
+import {
+  validateEventType,
+  validateUrl,
+  validateRequest,
+  validateEventQuery,
+} from '../../../src/utils/validation';
 
 describe('Utility Functions', () => {
   describe('validateEventType', () => {

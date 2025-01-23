@@ -6,6 +6,8 @@ export interface EventType {
   city: string;
   state: string;
   eventUrl: string;
+  interestedRiders?: string[];
+  housingUrl?: string;
 }
 
 export interface EventData {

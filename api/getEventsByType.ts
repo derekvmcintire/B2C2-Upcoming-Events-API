@@ -8,29 +8,29 @@ import { authMiddleware } from '../src/middleware/auth';
 
 /**
  * Handles the core logic for retrieving events by type.
- * 
+ *
  * This function validates query parameters, retrieves events from Firebase, and sends an appropriate response.
- * 
+ *
  * @param req - The incoming HTTP request, including query parameters for event filtering.
  * @param res - The HTTP response object for sending results back to the client.
  * @returns A `Promise<void>` that resolves after the request is handled.
- * 
+ *
  * ### Query Parameters
  * - `type` (string, required): The type of events to retrieve.
  * - `startDate` (string, optional): The start date for event filtering. Defaults to the current date if not provided.
- * 
+ *
  * ### Response Codes
  * - `200`: Events successfully retrieved.
  * - `400`: Invalid query parameters.
  * - `405`: Method not allowed (only `GET` is supported).
  * - `500`: Internal server error.
- * 
+ *
  * ### Example Request
  * ```http
  * GET /api/events?type=concert&startDate=2025-01-20 HTTP/1.1
  * Host: localhost
  * ```
- * 
+ *
  * ### Example Response
  * ```json
  * {
@@ -78,15 +78,15 @@ export async function handleGetEventsByType(
 
 /**
  * Serverless API handler for retrieving events by type with middleware support.
- * 
+ *
  * This endpoint supports the following middleware:
  * - **CORS Middleware** (`corsMiddleware`): Ensures that the endpoint is accessible across domains.
  * - **Authentication Middleware** (`authMiddleware`): Validates the client's authentication before proceeding.
- * 
+ *
  * @param req - The incoming HTTP request.
  * @param res - The HTTP response object for sending results back to the client.
  * @returns A `Promise<void>` that resolves after the request is fully handled.
- * 
+ *
  * ### Middleware Workflow
  * 1. **CORS Middleware**: Adds CORS headers to the response and proceeds.
  * 2. **Authentication Middleware**: Verifies the client's authentication and proceeds.

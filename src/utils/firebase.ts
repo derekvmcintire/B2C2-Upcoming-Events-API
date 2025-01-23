@@ -1,6 +1,11 @@
 // src/utils/firebase.ts
 import admin from 'firebase-admin';
 import { type EventType } from '../types';
+import dotenv from 'dotenv';
+
+if (process.env.CI !== 'true') {
+  dotenv.config({ path: '.env.test' });
+}
 
 /**
  * Initializes the Firebase Firestore instance if it hasn't been initialized yet.
@@ -67,12 +72,18 @@ export async function storeEvent(event: EventType): Promise<{ isNew: boolean }> 
   }
 
   const db = initializeFirebase();
+  const newEvent = {
+    ...event,
+    interestedRiders: event.interestedRiders || [], // Default to an empty array
+    housingUrl: event.housingUrl || null, // Default to null
+  };
+
   await db
     .collection('events')
     .doc(event.eventType)
     .collection('events')
     .doc(event.eventId)
-    .set(event);
+    .set(newEvent);
 
   return { isNew: true };
 }
@@ -100,8 +111,28 @@ export async function fetchEventsByType(type: string, startDate: string): Promis
     return [];
   }
 
-  return snapshot.docs.map((doc) => ({
-    ...(doc.data() as EventType),
-    eventId: doc.id,
-  }));
+  return snapshot.docs.map((doc) => {
+    const {
+      eventType,
+      name,
+      date,
+      city,
+      state,
+      eventUrl,
+      interestedRiders = [],
+      housingUrl = undefined,
+    } = doc.data() as EventType;
+
+    return {
+      eventId: doc.id,
+      eventType,
+      name,
+      date,
+      city,
+      state,
+      eventUrl,
+      interestedRiders,
+      housingUrl,
+    };
+  });
 }

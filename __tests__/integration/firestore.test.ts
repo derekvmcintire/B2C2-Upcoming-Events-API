@@ -1,4 +1,9 @@
 import { initializeFirebase } from '../../src/utils/firebase';
+import dotenv from 'dotenv';
+
+if (process.env.CI !== 'true') {
+  dotenv.config({ path: '.env.test' });
+}
 
 describe('Firestore Emulator Integration Test', () => {
   let db: FirebaseFirestore.Firestore;

@@ -11,8 +11,8 @@
     "format": "prettier --write \"**/*.{ts,json,md}\"",
     "type-check": "tsc --noEmit",
     "test": "jest",
-    "test:unit": "jest --config jest.config.js --testPathIgnorePatterns=__tests__/unit",
-    "test:integration": "jest --config jest.config.js --testPathIgnorePatterns=__tests__/integration",
+    "test:unit": "jest --config jest.config.js __tests__/unit",
+    "test:integration": "jest --config jest.config.js __tests__/integration",
     "test:smoke": "jest --config jest.config.js __tests__/smoke"
   },
   "dependencies": {
