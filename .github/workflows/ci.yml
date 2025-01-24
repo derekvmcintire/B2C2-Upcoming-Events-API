@@ -1,5 +1,12 @@
 name: CI
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - '**'  # This will run on push to any branch (feature branches)
+  pull_request:
+    branches:
+      - main  # This will trigger the workflow on PR creation/updates targeting the main branch
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -10,7 +17,7 @@ jobs:
           node-version: '18'
       - run: npm ci
 
-      # Deploy to Vercel
+      # Deploy to Vercel only if it's the first run or when a push happens
       - name: Deploy to Vercel
         id: vercel-deploy
         uses: amondnet/vercel-action@v20
