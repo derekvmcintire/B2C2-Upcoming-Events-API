@@ -7,7 +7,15 @@ import { EventDiscipline, GetEventsQuery, type SubmitEventRequest } from '../typ
  * @returns {boolean} True if the event type is valid, otherwise false.
  */
 export function validateEventType(eventType: string): boolean {
-  return ['road', 'cx', 'xc'].includes(eventType);
+  if (
+    !eventType ||
+    !(['road', 'cx', 'xc', 'special'] as EventDiscipline[]).includes(
+      eventType.toLowerCase() as EventDiscipline
+    )
+  ) {
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -56,13 +64,7 @@ export function validateRequest(req: SubmitEventRequest): string | null {
 export function validateEventQuery(query: GetEventsQuery): string | null {
   const { type, startDate } = query;
 
-  // Use the type to validate directly
-  if (
-    !type ||
-    !(['road', 'cx', 'xc', 'special'] as EventDiscipline[]).includes(
-      type.toLowerCase() as EventDiscipline
-    )
-  ) {
+  if (!validateEventType(type)) {
     return 'Invalid event type. Must be one of: road, cx, xc, special';
   }
 

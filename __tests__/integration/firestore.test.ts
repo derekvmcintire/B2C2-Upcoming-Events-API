@@ -16,7 +16,10 @@ describe('Firestore Emulator Integration Test', () => {
 
   afterAll(async () => {
     // Clean up Firestore connection
-    await db.terminate();
+    console.log('Terminating Firestore connection...');
+    await db.terminate(); // Terminate Firestore connection
+    await (await import('firebase-admin')).apps[0]?.delete(); // Clean up Firebase app
+    console.log('Firestore connection terminated.');
   });
 
   beforeEach(async () => {

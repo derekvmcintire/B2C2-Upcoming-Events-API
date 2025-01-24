@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "ts-node-dev --respawn dev-server.ts",
-    "firestore:emulator": "firebase emulators:start --only firestore",
+    "start:emulator": "firebase emulators:start --only firestore",
+    "stop:emulator": "firebase emulators:exec",
     "vercel:dev": "vercel dev",
     "deploy": "vercel deploy --prod",
     "lint": "eslint . --ext .ts",
@@ -12,8 +13,8 @@
     "type-check": "tsc --noEmit",
     "test": "jest",
     "test:unit": "jest --config jest.config.js __tests__/unit",
-    "test:integration": "jest --config jest.config.js __tests__/integration",
-    "test:smoke": "jest --config jest.config.js __tests__/smoke"
+    "test:integration": "firebase emulators:exec --only firestore 'jest --config jest.config.js --detectOpenHandles --forceExit __tests__/integration'",
+    "test:smoke": "concurrently --kill-others \"ts-node-dev dev-server.ts\" \"jest --config jest.config.js --detectOpenHandles --forceExit __tests__/smoke\""
   },
   "dependencies": {
     "@vercel/node": "^4.0.0",

@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const PORT = 5173;
+const PORT = 4001;
 
 /**
  * Creates a Vercel-like response object from the native HTTP response object.
