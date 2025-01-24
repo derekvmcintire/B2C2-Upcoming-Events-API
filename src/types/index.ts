@@ -1,6 +1,8 @@
+export type EventDiscipline = 'road' | 'cx' | 'xc';
+
 export interface EventType {
   eventId: string;
-  eventType: 'road' | 'cx' | 'xc';
+  eventType: EventDiscipline;
   name: string;
   date: string;
   city: string;

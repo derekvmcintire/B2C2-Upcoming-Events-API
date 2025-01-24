@@ -1,5 +1,13 @@
 import { type VercelRequest, VercelResponse } from '@vercel/node';
 import { initializeFirebase } from '../src/utils/firebase';
+import { EventDiscipline } from '../src/types';
+
+type UpdateEventData = {
+  eventId: string;
+  eventType: EventDiscipline;
+  housingUrl?: string;
+  interestedRiders?: string[];
+};
 
 /**
  * Handles adding or updating event data with new optional fields.
@@ -15,11 +23,11 @@ export default async function updateEvent(req: VercelRequest, res: VercelRespons
   }
 
   try {
-    const { eventId, interestedRiders, housingUrl } = req.body;
+    const { eventId, eventType, interestedRiders, housingUrl }: UpdateEventData = req.body;
 
     // Validate input
-    if (!eventId) {
-      res.status(400).json({ error: 'eventId is required' });
+    if (!eventId || !eventType) {
+      res.status(400).json({ error: 'eventId and eventType are required' });
       return;
     }
 
@@ -35,14 +43,16 @@ export default async function updateEvent(req: VercelRequest, res: VercelRespons
     }
 
     const firestore = initializeFirebase();
-    const eventRef = firestore.collection('events').doc(eventId);
+    const eventRef = firestore
+      .collection('events')
+      .doc(eventType)
+      .collection('events')
+      .doc(eventId);
 
     // Prepare update object with only provided fields
-    const updateData: Record<string, any> = {};
+    const updateData: Pick<UpdateEventData, 'housingUrl' | 'interestedRiders'> = {};
     if (interestedRiders) updateData.interestedRiders = interestedRiders;
     if (housingUrl) updateData.housingUrl = housingUrl;
-
-    console.log('updating data with: ', updateData)
 
     // Perform partial update
     await eventRef.update(updateData);
