@@ -1,4 +1,4 @@
-export type EventDiscipline = 'road' | 'cx' | 'xc';
+export type EventDiscipline = 'road' | 'cx' | 'xc' | 'special';
 
 export interface EventType {
   eventId: string;
@@ -7,7 +7,7 @@ export interface EventType {
   date: string;
   city: string;
   state: string;
-  eventUrl: string;
+  eventUrl?: string;
   interestedRiders?: string[];
   housingUrl?: string;
 }
