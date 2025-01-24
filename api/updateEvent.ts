@@ -5,8 +5,8 @@ import { EventDiscipline } from '../src/types';
 type UpdateEventData = {
   eventId: string;
   eventType: EventDiscipline;
-  housingUrl?: string;
-  interestedRiders?: string[];
+  housingUrl?: string | null;
+  interestedRiders?: string[] | null;
 };
 
 /**
@@ -32,13 +32,8 @@ export default async function updateEvent(req: VercelRequest, res: VercelRespons
     }
 
     // Additional type checking
-    if (interestedRiders && !Array.isArray(interestedRiders)) {
-      res.status(400).json({ error: 'interestedRiders must be an array' });
-      return;
-    }
-
-    if (housingUrl && typeof housingUrl !== 'string') {
-      res.status(400).json({ error: 'housingUrl must be a string' });
+    if (interestedRiders !== undefined && !Array.isArray(interestedRiders)) {
+      res.status(400).json({ error: 'interestedRiders must be an array or null' });
       return;
     }
 
@@ -49,10 +44,12 @@ export default async function updateEvent(req: VercelRequest, res: VercelRespons
       .collection('events')
       .doc(eventId);
 
-    // Prepare update object with only provided fields
-    const updateData: Pick<UpdateEventData, 'housingUrl' | 'interestedRiders'> = {};
-    if (interestedRiders) updateData.interestedRiders = interestedRiders;
-    if (housingUrl) updateData.housingUrl = housingUrl;
+    // Prepare update object supporting removal and updates
+    const updateData: Partial<UpdateEventData> = {};
+    
+    // Allow setting to null to remove field
+    if (housingUrl !== undefined) updateData.housingUrl = housingUrl;
+    if (interestedRiders !== undefined) updateData.interestedRiders = interestedRiders;
 
     // Perform partial update
     await eventRef.update(updateData);
