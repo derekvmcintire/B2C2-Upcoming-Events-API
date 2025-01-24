@@ -3,7 +3,10 @@ import hello from '../../api/hello';
 
 describe('hello API', () => {
   it('should respond with "Hello World!" when no name is provided', () => {
-    const req = { query: {} } as Partial<VercelRequest> as VercelRequest;
+    const req = {
+      query: {},
+      headers: { 'x-api-key': process.env.API_SECRET_KEY || '' },
+    } as Partial<VercelRequest> as VercelRequest;
 
     const setHeaderMock = jest.fn(); // Mock setHeader
     const jsonMock = jest.fn();
@@ -23,7 +26,7 @@ describe('hello API', () => {
     );
     expect(setHeaderMock).toHaveBeenCalledWith(
       'Access-Control-Allow-Headers',
-      'Content-Type, Authorization'
+      'Content-Type, Authorization, x-api-key'
     );
     expect(jsonMock).toHaveBeenCalledWith({
       message: 'Hello World!',
@@ -31,7 +34,10 @@ describe('hello API', () => {
   });
 
   it('should respond with "Hello [name]!" when a name is provided', () => {
-    const req = { query: { name: 'Alice' } } as Partial<VercelRequest> as VercelRequest;
+    const req = {
+      query: { name: 'Alice' },
+      headers: { 'x-api-key': process.env.API_SECRET_KEY || '' },
+    } as Partial<VercelRequest> as VercelRequest;
 
     const setHeaderMock = jest.fn();
     const jsonMock = jest.fn();
@@ -51,7 +57,7 @@ describe('hello API', () => {
     );
     expect(setHeaderMock).toHaveBeenCalledWith(
       'Access-Control-Allow-Headers',
-      'Content-Type, Authorization'
+      'Content-Type, Authorization, x-api-key'
     );
     expect(jsonMock).toHaveBeenCalledWith({
       message: 'Hello Alice!',

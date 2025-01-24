@@ -26,6 +26,7 @@ describe('getEventsByType', () => {
   it('should respond with events when query is valid', async () => {
     const mockRequest = {
       method: 'GET',
+      headers: { 'x-api-key': process.env.API_SECRET_KEY || '' },
       query: {
         type: 'road',
         startDate: '2025-01-01',
@@ -53,6 +54,7 @@ describe('getEventsByType', () => {
   it('should return 400 if validation fails', async () => {
     const mockRequest = {
       method: 'GET',
+      headers: { 'x-api-key': process.env.API_SECRET_KEY || '' },
       query: {
         type: '', // Invalid type
         startDate: 'invalid-date',

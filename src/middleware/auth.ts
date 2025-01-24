@@ -16,24 +16,10 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
  *          or calls `next()` if authentication is successful.
  */
 export async function authMiddleware(req: VercelRequest, res: VercelResponse, next: Function) {
-  // Debug logging for the full request object
-  console.log('Full request:', {
-    headers: req.headers,
-    method: req.method,
-    url: req.url,
-  });
-
   // Extract headers and API key from the incoming request
   const headers = req.headers || {};
   const apiKey = headers['x-api-key'] || headers['X-API-KEY'];
   const expectedApiKey = process.env.API_SECRET_KEY;
-
-  // Log the authentication check details for debugging purposes
-  console.log('Auth check:', {
-    hasApiKey: !!apiKey, // Indicates whether an API key was provided
-    hasExpectedKey: !!expectedApiKey, // Indicates if the server has a configured key
-    headersPresent: Object.keys(headers), // List of headers present in the request
-  });
 
   // Check if the server is configured with an API_SECRET_KEY
   if (!expectedApiKey) {
@@ -49,7 +35,7 @@ export async function authMiddleware(req: VercelRequest, res: VercelResponse, ne
 
   // Validate the provided API key against the expected key
   if (apiKey !== expectedApiKey) {
-    console.log('Invalid API key provided');
+    console.log('Invalid API key provided: ', apiKey);
     return res.status(401).end(JSON.stringify({ error: 'Invalid API key' }));
   }
 
