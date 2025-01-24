@@ -26,13 +26,6 @@ export async function authMiddleware(req: VercelRequest, res: VercelResponse, ne
   const apiKey = headers['x-api-key'] || headers['X-API-KEY'];
   const expectedApiKey = process.env.API_SECRET_KEY;
 
-  // Log the authentication check details for debugging purposes
-  console.log('Auth check:', {
-    hasApiKey: !!apiKey, // Indicates whether an API key was provided
-    hasExpectedKey: !!expectedApiKey, // Indicates if the server has a configured key
-    headersPresent: Object.keys(headers), // List of headers present in the request
-  });
-
   // Check if the server is configured with an API_SECRET_KEY
   if (!expectedApiKey) {
     console.error('API_SECRET_KEY not configured in environment');

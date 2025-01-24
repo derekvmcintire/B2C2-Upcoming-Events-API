@@ -38,7 +38,7 @@ export default function hello(req: VercelRequest, res: VercelResponse): void {
   corsMiddleware(req, res, () => {
     authMiddleware(req, res, () => {
       const { name = 'World' } = req.query;
-
+      
       // Send a JSON response with a personalized greeting
       return res.json({
         message: `Hello ${name}!`,
