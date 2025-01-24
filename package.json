@@ -14,7 +14,7 @@
     "test": "jest",
     "test:unit": "jest --config jest.config.js __tests__/unit",
     "test:integration": "firebase emulators:exec --only firestore 'jest --config jest.config.js --detectOpenHandles --forceExit __tests__/integration'",
-    "test:smoke": "concurrently --kill-others \"ts-node-dev dev-server.ts\" \"jest --config jest.config.js --detectOpenHandles --forceExit __tests__/smoke\""
+    "test:smoke": "jest --config jest.config.js __tests__/smoke"
   },
   "dependencies": {
     "@vercel/node": "^4.0.0",

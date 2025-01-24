@@ -1,3 +1,4 @@
+import { exec } from 'child_process';
 import fetch from 'cross-fetch';
 import dotenv from 'dotenv';
 
