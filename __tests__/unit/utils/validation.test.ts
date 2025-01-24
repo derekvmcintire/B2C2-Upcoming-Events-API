@@ -78,7 +78,7 @@ describe('Utility Functions', () => {
     it('should return an error message for invalid event type in query', () => {
       const invalidTypeQuery: GetEventsQuery = { type: 'invalid', startDate: '2025-01-20' };
       expect(validateEventQuery(invalidTypeQuery)).toBe(
-        'Invalid event type. Must be one of: road, cx, xc'
+        'Invalid event type. Must be one of: road, cx, xc, special'
       );
     });
 
