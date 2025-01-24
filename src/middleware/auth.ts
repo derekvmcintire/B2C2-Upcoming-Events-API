@@ -1,9 +1,4 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import dotenv from 'dotenv';
-
-if (process.env.CI !== 'true') {
-  dotenv.config({ path: '.env.test' });
-}
 
 /**
  * Middleware function to enforce API key-based authentication for incoming requests.

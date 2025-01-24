@@ -1,11 +1,6 @@
 // src/utils/firebase.ts
 import admin from 'firebase-admin';
 import { type EventType } from '../types';
-import dotenv from 'dotenv';
-
-if (process.env.CI !== 'true') {
-  dotenv.config({ path: '.env.test' });
-}
 
 /**
  * Initializes the Firebase Firestore instance if it hasn't been initialized yet.
