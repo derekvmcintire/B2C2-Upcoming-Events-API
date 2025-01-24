@@ -46,7 +46,7 @@ export default async function updateEvent(req: VercelRequest, res: VercelRespons
 
     // Prepare update object supporting removal and updates
     const updateData: Partial<UpdateEventData> = {};
-    
+
     // Allow setting to null to remove field
     if (housingUrl !== undefined) updateData.housingUrl = housingUrl;
     if (interestedRiders !== undefined) updateData.interestedRiders = interestedRiders;
