@@ -17,10 +17,12 @@ if (!API_SECRET_KEY) {
 }
 
 describe('Smoke Tests', () => {
-  beforeAll(() => {
+  beforeAll(async () => {
     console.log('Environment check:');
     console.log('API_BASE_URL:', API_BASE_URL);
     console.log('API_SECRET_KEY exists:', !!API_SECRET_KEY);
+    console.log('Waiting for the server to start...');
+    await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait 3 seconds
   });
 
   it('should perform a smoke test', async () => {
