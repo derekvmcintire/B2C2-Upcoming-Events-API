@@ -6,6 +6,7 @@ on:
   pull_request:
     branches:
       - main  # This will trigger the workflow on PR creation/updates targeting the main branch
+  workflow_dispatch:  # Allows you to trigger the workflow manually
 
 jobs:
   build:
