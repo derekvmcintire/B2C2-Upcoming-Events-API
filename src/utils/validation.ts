@@ -1,4 +1,4 @@
-import { GetEventsQuery, type SubmitEventRequest } from '../types';
+import { EventDiscipline, GetEventsQuery, type SubmitEventRequest } from '../types';
 
 /**
  * Validates if the given event type is one of the allowed types.
@@ -56,8 +56,14 @@ export function validateRequest(req: SubmitEventRequest): string | null {
 export function validateEventQuery(query: GetEventsQuery): string | null {
   const { type, startDate } = query;
 
-  if (!type || typeof type !== 'string' || !['road', 'cx', 'xc'].includes(type.toLowerCase())) {
-    return 'Invalid event type. Must be one of: road, cx, xc';
+  // Use the type to validate directly
+  if (
+    !type ||
+    !(['road', 'cx', 'xc', 'special'] as EventDiscipline[]).includes(
+      type.toLowerCase() as EventDiscipline
+    )
+  ) {
+    return 'Invalid event type. Must be one of: road, cx, xc, special';
   }
 
   if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate.toString())) {
