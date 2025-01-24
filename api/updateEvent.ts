@@ -9,7 +9,7 @@ import { initializeFirebase } from '../src/utils/firebase';
  * @returns A `Promise<void>` that resolves after the request is handled.
  */
 export default async function updateEvent(req: VercelRequest, res: VercelResponse): Promise<void> {
-  if (req.method !== 'POST') {
+  if (req.method !== 'PATCH') {
     res.status(405).json({ error: 'Method not allowed' });
     return;
   }
@@ -17,23 +17,35 @@ export default async function updateEvent(req: VercelRequest, res: VercelRespons
   try {
     const { eventId, interestedRiders, housingUrl } = req.body;
 
+    // Validate input
     if (!eventId) {
       res.status(400).json({ error: 'eventId is required' });
       return;
     }
 
-    const firestore = initializeFirebase();
+    // Additional type checking
+    if (interestedRiders && !Array.isArray(interestedRiders)) {
+      res.status(400).json({ error: 'interestedRiders must be an array' });
+      return;
+    }
 
+    if (housingUrl && typeof housingUrl !== 'string') {
+      res.status(400).json({ error: 'housingUrl must be a string' });
+      return;
+    }
+
+    const firestore = initializeFirebase();
     const eventRef = firestore.collection('events').doc(eventId);
 
-    // Update or create the document with optional fields
-    await eventRef.set(
-      {
-        ...(interestedRiders && { interestedRiders }), // Add if present
-        ...(housingUrl && { housingUrl }), // Add if present
-      },
-      { merge: true } // Ensures fields are updated without overwriting the document
-    );
+    // Prepare update object with only provided fields
+    const updateData: Record<string, any> = {};
+    if (interestedRiders) updateData.interestedRiders = interestedRiders;
+    if (housingUrl) updateData.housingUrl = housingUrl;
+
+    console.log('updating data with: ', updateData)
+
+    // Perform partial update
+    await eventRef.update(updateData);
 
     res.status(200).json({ message: 'Event updated successfully' });
   } catch (error) {
