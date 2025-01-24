@@ -1,8 +1,6 @@
 name: CI
 on:
   push:
-    branches:
-      - main  # This will trigger the workflow only when code is pushed to the `main` branch (e.g., after merging a PR)
 
 jobs:
   build:
