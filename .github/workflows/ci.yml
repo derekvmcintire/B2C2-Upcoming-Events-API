@@ -1,5 +1,13 @@
 name: CI
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - '**'  # This will run on push to any branch (feature branches)
+  pull_request:
+    branches:
+      - main  # This will trigger the workflow on PR creation/updates targeting the main branch
+  workflow_dispatch:  # Allows you to trigger the workflow manually
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -10,9 +18,10 @@ jobs:
           node-version: '18'
       - run: npm ci
 
-      # Deploy to Vercel
+      # Deploy to Vercel only if this is not triggered by a PR (we only want to deploy on push)
       - name: Deploy to Vercel
         id: vercel-deploy
+        if: github.event_name != 'pull_request'  # Prevent deployment on PR event
         uses: amondnet/vercel-action@v20
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}

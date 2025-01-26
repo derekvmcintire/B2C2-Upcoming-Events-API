@@ -5,16 +5,40 @@ import { EventDiscipline } from '../src/types';
 type UpdateEventData = {
   eventId: string;
   eventType: EventDiscipline;
-  housingUrl?: string;
+  housingUrl?: string | null;
   interestedRiders?: string[];
+  description?: string | null;
 };
 
 /**
- * Handles adding or updating event data with new optional fields.
+ * Validates the type of a field to ensure it matches the expected type.
+ * Responds with a 400 status code if the type is incorrect.
  *
- * @param req - Incoming HTTP request, containing event data in the body.
- * @param res - HTTP response object.
- * @returns A `Promise<void>` that resolves after the request is handled.
+ * @param value - The value to check.
+ * @param expectedType - The expected type of the value.
+ * @param fieldName - The name of the field being checked.
+ * @param res - The response object to send the error message.
+ */
+const validateFieldType = (
+  value: unknown,
+  expectedType: string,
+  fieldName: string,
+  res: VercelResponse
+): void => {
+  if (value !== undefined && value !== null && typeof value !== expectedType) {
+    res.status(400).json({ error: `Provided value for ${fieldName} must be a ${expectedType}` });
+  }
+};
+
+/**
+ * Updates an event in the Firestore database based on the provided event data.
+ * Only PATCH requests are allowed, and certain fields are validated before updating.
+ * Responds with appropriate status codes based on success or failure.
+ *
+ * @param req - The request object containing the event data to update.
+ * @param res - The response object to send the result of the update operation.
+ *
+ * @returns A promise that resolves when the update operation completes.
  */
 export default async function updateEvent(req: VercelRequest, res: VercelResponse): Promise<void> {
   if (req.method !== 'PATCH') {
@@ -23,7 +47,8 @@ export default async function updateEvent(req: VercelRequest, res: VercelRespons
   }
 
   try {
-    const { eventId, eventType, interestedRiders, housingUrl }: UpdateEventData = req.body;
+    const { eventId, eventType, interestedRiders, housingUrl, description }: UpdateEventData =
+      req.body;
 
     // Validate input
     if (!eventId || !eventType) {
@@ -31,16 +56,14 @@ export default async function updateEvent(req: VercelRequest, res: VercelRespons
       return;
     }
 
-    // Additional type checking
-    if (interestedRiders && !Array.isArray(interestedRiders)) {
+    // Type checking
+    if (interestedRiders !== undefined && !Array.isArray(interestedRiders)) {
       res.status(400).json({ error: 'interestedRiders must be an array' });
       return;
     }
 
-    if (housingUrl && typeof housingUrl !== 'string') {
-      res.status(400).json({ error: 'housingUrl must be a string' });
-      return;
-    }
+    validateFieldType(housingUrl, 'string', 'housingUrl', res);
+    validateFieldType(description, 'string', 'description', res);
 
     const firestore = initializeFirebase();
     const eventRef = firestore
@@ -49,10 +72,12 @@ export default async function updateEvent(req: VercelRequest, res: VercelRespons
       .collection('events')
       .doc(eventId);
 
-    // Prepare update object with only provided fields
-    const updateData: Pick<UpdateEventData, 'housingUrl' | 'interestedRiders'> = {};
-    if (interestedRiders) updateData.interestedRiders = interestedRiders;
-    if (housingUrl) updateData.housingUrl = housingUrl;
+    // Prepare update object with all possible fields, allowing null/empty values
+    const updateData: Partial<UpdateEventData> = {};
+
+    if (interestedRiders !== undefined) updateData.interestedRiders = interestedRiders;
+    if (housingUrl !== undefined) updateData.housingUrl = housingUrl;
+    if (description !== undefined) updateData.description = description;
 
     // Perform partial update
     await eventRef.update(updateData);
