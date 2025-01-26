@@ -10,6 +10,7 @@ export interface EventType {
   eventUrl?: string;
   interestedRiders?: string[];
   housingUrl?: string;
+  description?: string;
 }
 
 export interface EventData {
