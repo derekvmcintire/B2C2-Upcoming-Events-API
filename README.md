@@ -1,6 +1,6 @@
 # B2C2 Events API
 
-This API provides serverless functions for managing cycling event data, integrating with Firebase Firestore and a third-party BikeReg GraphQL API. The service is primarily used by the B2C2 cycling team's Event Calendar application for internal event tracking.
+This API provides serverless functions for managing cycling event data, integrating with Firebase Firestore and a third-party GraphQL API. The service is primarily used by the B2C2 cycling team's Event Calendar application for internal event tracking.
 
 ## Technology Stack
 
