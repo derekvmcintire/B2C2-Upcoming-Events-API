@@ -70,6 +70,7 @@ export async function storeEvent(event: EventType): Promise<{ isNew: boolean }> 
   const newEvent = {
     ...event,
     interestedRiders: event.interestedRiders || [], // Default to an empty array
+    committedRiders: event.committedRiders || [],
     housingUrl: event.housingUrl || null, // Default to null
     description: event.description || null,
   };
@@ -116,6 +117,7 @@ export async function fetchEventsByType(type: string, startDate: string): Promis
       state,
       eventUrl,
       interestedRiders = [],
+      committedRiders = [],
       housingUrl = undefined,
       description = undefined,
     } = doc.data() as EventType;
@@ -129,6 +131,7 @@ export async function fetchEventsByType(type: string, startDate: string): Promis
       state,
       eventUrl,
       interestedRiders,
+      committedRiders,
       housingUrl,
       description,
     };
