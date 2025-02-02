@@ -7,6 +7,7 @@ type UpdateEventData = {
   eventType: EventDiscipline;
   housingUrl?: string | null;
   interestedRiders?: string[];
+  committedRiders?: string[];
   description?: string | null;
 };
 
@@ -47,7 +48,7 @@ export default async function updateEvent(req: VercelRequest, res: VercelRespons
   }
 
   try {
-    const { eventId, eventType, interestedRiders, housingUrl, description }: UpdateEventData =
+    const { eventId, eventType, interestedRiders, committedRiders, housingUrl, description }: UpdateEventData =
       req.body;
 
     // Validate input
@@ -59,6 +60,11 @@ export default async function updateEvent(req: VercelRequest, res: VercelRespons
     // Type checking
     if (interestedRiders !== undefined && !Array.isArray(interestedRiders)) {
       res.status(400).json({ error: 'interestedRiders must be an array' });
+      return;
+    }
+
+    if (committedRiders !== undefined && !Array.isArray(committedRiders)) {
+      res.status(400).json({ error: 'committedRiders must be an array' });
       return;
     }
 
@@ -76,6 +82,7 @@ export default async function updateEvent(req: VercelRequest, res: VercelRespons
     const updateData: Partial<UpdateEventData> = {};
 
     if (interestedRiders !== undefined) updateData.interestedRiders = interestedRiders;
+    if (committedRiders !== undefined) updateData.committedRiders = committedRiders;
     if (housingUrl !== undefined) updateData.housingUrl = housingUrl;
     if (description !== undefined) updateData.description = description;
 
