@@ -1,6 +1,6 @@
 import { type VercelRequest, VercelResponse } from '@vercel/node';
 import { initializeFirebase } from '../src/utils/firebase';
-import { EventDiscipline } from '../src/types';
+import { Carpool, EventDiscipline, Housing } from '../src/types';
 
 type UpdateEventData = {
   eventId: string;
@@ -9,6 +9,9 @@ type UpdateEventData = {
   interestedRiders?: string[];
   committedRiders?: string[];
   description?: string | null;
+  labels?: string[];
+  carpools: Carpool[];
+  housing: Housing;
 };
 
 /**
@@ -48,8 +51,17 @@ export default async function updateEvent(req: VercelRequest, res: VercelRespons
   }
 
   try {
-    const { eventId, eventType, interestedRiders, committedRiders, housingUrl, description }: UpdateEventData =
-      req.body;
+    const {
+      eventId,
+      eventType,
+      interestedRiders,
+      committedRiders,
+      housingUrl,
+      description,
+      labels,
+      carpools,
+      housing,
+    }: UpdateEventData = req.body;
 
     // Validate input
     if (!eventId || !eventType) {
@@ -65,6 +77,42 @@ export default async function updateEvent(req: VercelRequest, res: VercelRespons
 
     if (committedRiders !== undefined && !Array.isArray(committedRiders)) {
       res.status(400).json({ error: 'committedRiders must be an array' });
+      return;
+    }
+
+    if (labels !== undefined && !Array.isArray(labels)) {
+      res.status(400).json({ error: 'labels must be an array' });
+      return;
+    }
+
+    if (carpools !== undefined) {
+      carpools.forEach((carpool: Carpool) => {
+        if (!Array.isArray(carpool.riders) || !carpool.name || !carpool.seats) {
+          res
+            .status(400)
+            .json({
+              error: 'carpool must be of shape: { name: string, seats: number, riders: string[]',
+            });
+          return;
+        }
+      });
+    }
+
+    if (housing !== undefined && !housingUrl) {
+      res
+        .status(400)
+        .json({
+          error:
+            'request to update housing.committed or housing.interested must include housingUrl',
+        });
+      return;
+    }
+
+    if (
+      housing !== undefined &&
+      (!Array.isArray(housing.committed) || !Array.isArray(housing.interested))
+    ) {
+      res.status(400).json({ error: 'housing.committed and housing.interested must be an array' });
       return;
     }
 
@@ -85,6 +133,9 @@ export default async function updateEvent(req: VercelRequest, res: VercelRespons
     if (committedRiders !== undefined) updateData.committedRiders = committedRiders;
     if (housingUrl !== undefined) updateData.housingUrl = housingUrl;
     if (description !== undefined) updateData.description = description;
+    if (labels !== undefined) updateData.labels = labels;
+    if (carpools !== undefined) updateData.carpools = carpools;
+    if (housing !== undefined) updateData.housing = housing;
 
     // Perform partial update
     await eventRef.update(updateData);

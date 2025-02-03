@@ -73,6 +73,9 @@ export async function storeEvent(event: EventType): Promise<{ isNew: boolean }> 
     committedRiders: event.committedRiders || [],
     housingUrl: event.housingUrl || null, // Default to null
     description: event.description || null,
+    labels: event.labels || [],
+    carpools: event.carpools || {},
+    housing: event.housing || {},
   };
 
   await db
@@ -120,6 +123,9 @@ export async function fetchEventsByType(type: string, startDate: string): Promis
       committedRiders = [],
       housingUrl = undefined,
       description = undefined,
+      labels = [],
+      carpools = [],
+      housing = {},
     } = doc.data() as EventType;
 
     return {
@@ -134,6 +140,9 @@ export async function fetchEventsByType(type: string, startDate: string): Promis
       committedRiders,
       housingUrl,
       description,
+      labels,
+      carpools,
+      housing,
     };
   });
 }
