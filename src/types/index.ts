@@ -12,6 +12,9 @@ export interface EventType {
   committedRiders?: string[];
   housingUrl?: string;
   description?: string;
+  labels?: string[];
+  carpools?: Carpool[];
+  housing?: Housing;
 }
 
 export interface EventData {
@@ -39,3 +42,14 @@ export interface GetEventsQuery {
   type: string;
   startDate: string;
 }
+
+export type Carpool = {
+  name: string;
+  seats: number;
+  riders: string[];
+};
+
+export type Housing = {
+  committed?: string[];
+  interested?: string[];
+};
