@@ -74,7 +74,7 @@ export async function storeEvent(event: EventType): Promise<{ isNew: boolean }> 
     housingUrl: event.housingUrl || null, // Default to null
     description: event.description || null,
     labels: event.labels || [],
-    carpools: event.carpools || {},
+    carpools: event.carpools || [],
     housing: event.housing || {},
   };
 
