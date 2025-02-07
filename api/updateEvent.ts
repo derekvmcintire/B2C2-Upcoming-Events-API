@@ -88,24 +88,12 @@ export default async function updateEvent(req: VercelRequest, res: VercelRespons
     if (carpools !== undefined) {
       carpools.forEach((carpool: Carpool) => {
         if (!Array.isArray(carpool.riders) || !carpool.name || !carpool.seats) {
-          res
-            .status(400)
-            .json({
-              error: 'carpool must be of shape: { name: string, seats: number, riders: string[]',
-            });
+          res.status(400).json({
+            error: 'carpool must be of shape: { name: string, seats: number, riders: string[]',
+          });
           return;
         }
       });
-    }
-
-    if (housing !== undefined && !housingUrl) {
-      res
-        .status(400)
-        .json({
-          error:
-            'request to update housing.committed or housing.interested must include housingUrl',
-        });
-      return;
     }
 
     if (
