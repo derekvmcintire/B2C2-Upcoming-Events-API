@@ -10,13 +10,13 @@ stop-emulator:
 lint:
 	npm run lint
 
-test-unit:
+unit:
 	npm run test:unit
 
-test-integration:
+integration:
 	npm run test:integration
 
-test-smoke:
+smoke:
 	npm run test:smoke
 
 typecheck:
